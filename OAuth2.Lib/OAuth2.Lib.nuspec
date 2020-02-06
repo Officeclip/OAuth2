@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>OfficeClip</authors>
+    <owners>$author$</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/Officeclip/OAuth2</projectUrl>
+    <iconUrl>https://www.officeclip.com/images/logo1.gif</iconUrl>
+    <description>A Wrapper over Google OAuth2</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2020</copyright>
+    <tags></tags>
+  </metadata>
+</package>

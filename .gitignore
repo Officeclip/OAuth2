@@ -5,3 +5,9 @@
 /OAuth2.Services/bin/Debug
 /OAuth2.Services/obj/Debug
 /packages
+/.vs/OAuth2
+/OAuth2.Example/obj/Release
+/OAuth2.Lib/bin
+/OAuth2.Lib/obj/Release
+/OAuth2.Services/bin
+/OAuth2.Services/obj/Release
