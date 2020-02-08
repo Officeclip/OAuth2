@@ -78,6 +78,7 @@
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="OAuth2.Lib.nuspec" />
     <None Include="OfficeClipKey.snk" />
     <None Include="packages.config" />
   </ItemGroup>

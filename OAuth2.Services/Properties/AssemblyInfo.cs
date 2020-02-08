@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OAuth2.Services")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("OfficeClip.OpenSource.OAuth2.Services")]
+[assembly: AssemblyDescription("Oauth2 Services wrapper")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("OAuth2.Services")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany("OfficeClip LLC")]
+[assembly: AssemblyProduct("OfficeClip.OpenSource.OAuth2.Services")]
+[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyTrademark("OfficeClip LLC")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

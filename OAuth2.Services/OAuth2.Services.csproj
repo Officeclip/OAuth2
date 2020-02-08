@@ -68,6 +68,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="OAuth2.Services.nuspec" />
     <None Include="OfficeClipKey.snk" />
     <None Include="packages.config" />
   </ItemGroup>
