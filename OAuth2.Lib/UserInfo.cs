@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OfficeClip.OpenSource.Lib;
-
-namespace OfficeClip.OpenSource.OAuth2.Lib
+﻿namespace OfficeClip.OpenSource.OAuth2.Lib
 {
     public class UserInfo
     {

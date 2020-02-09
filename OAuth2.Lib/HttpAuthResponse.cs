@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 
-namespace OfficeClip.OpenSource.Lib
+namespace OfficeClip.OpenSource.OAuth2.Lib
 {
     public class HttpAuthResponse
     {

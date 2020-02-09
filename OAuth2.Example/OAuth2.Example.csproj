@@ -71,6 +71,7 @@
     <Content Include="packages.config" />
     <Content Include="oAuth2Settings.config">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -111,7 +112,6 @@
       <DependentUpon>test.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\OAuth2.Lib\OAuth2.Lib.csproj">
       <Project>{0eaf0692-d55e-4229-9587-5a7e76260cc6}</Project>

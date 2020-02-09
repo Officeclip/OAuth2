@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="auth.aspx.cs" 
-    Inherits="OfficeClip.OpenSource.Example.auth" %>
+    Inherits="OfficeClip.OpenSource.OAuth2.Example.auth" %>
 
 <!DOCTYPE html>
 

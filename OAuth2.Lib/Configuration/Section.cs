@@ -1,7 +1,6 @@
-﻿using OfficeClip.OpenSource.OAuth2.Lib.Configuration;
-using System.Configuration;
+﻿using System.Configuration;
 
-namespace OfficeClip.OpenSource.Lib.Configuration
+namespace OfficeClip.OpenSource.OAuth2.Lib.Configuration
 {
     public class Section : ConfigurationSection
     {

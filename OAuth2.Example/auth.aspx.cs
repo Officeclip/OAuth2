@@ -4,7 +4,7 @@ using System.Net;
 using OfficeClip.OpenSource.OAuth2.Lib.Provider;
 //using OpenNetTools.OAuth2.Services.Google.Contacts;
 
-namespace OfficeClip.OpenSource.Example
+namespace OfficeClip.OpenSource.OAuth2.Example
 {
     public partial class auth : System.Web.UI.Page
     {
@@ -12,10 +12,10 @@ namespace OfficeClip.OpenSource.Example
         protected string ImageResizedHtml;
         protected void Page_Load(object sender, EventArgs e)
         {
-            //var element = Utils.LoadConfigurationFromWebConfig("Google");
-            //var client = new Google(element.ClientId, element.ClientSecret, element.Scope, element.RedirectUri);
-            var element = Utils.LoadConfigurationFromWebConfig("WindowsLive");
-            var client = new WindowsLive(element.ClientId, element.ClientSecret, element.Scope, element.RedirectUri);
+            var element = Utils.LoadConfigurationFromWebConfig("Google");
+            var client = new Google(element.ClientId, element.ClientSecret, element.Scope, element.RedirectUri);
+            //var element = Utils.LoadConfigurationFromWebConfig("WindowsLive");
+            //var client = new WindowsLive(element.ClientId, element.ClientSecret, element.Scope, element.RedirectUri);
             try
             {
                 client.HandleAuthorizationCodeResponse();

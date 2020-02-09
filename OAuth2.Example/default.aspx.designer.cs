@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace OfficeClip.OpenSource.Example
+namespace OfficeClip.OpenSource.OAuth2.Example
 {
 
 

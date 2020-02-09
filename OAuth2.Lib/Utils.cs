@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Configuration;
-using OfficeClip.OpenSource.Lib;
-using OfficeClip.OpenSource.Lib.Configuration;
 using OfficeClip.OpenSource.OAuth2.Lib.Configuration;
 
 namespace OfficeClip.OpenSource.OAuth2.Lib

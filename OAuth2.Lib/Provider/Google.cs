@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
-using OfficeClip.OpenSource.Lib;
 
 namespace OfficeClip.OpenSource.OAuth2.Lib.Provider
 {

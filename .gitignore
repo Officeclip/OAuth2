@@ -11,3 +11,4 @@
 /OAuth2.Lib/obj/Release
 /OAuth2.Services/bin
 /OAuth2.Services/obj/Release
+/OAuth2.Example/oAuth2Settings.config

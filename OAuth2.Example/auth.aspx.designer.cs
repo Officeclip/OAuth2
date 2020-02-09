@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace OfficeClip.OpenSource.Example {
-    
-    
-    public partial class auth {
-        
+namespace OfficeClip.OpenSource.OAuth2.Example
+{
+
+
+    public partial class auth
+    {
+
         /// <summary>
         /// form1 control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace OfficeClip.OpenSource.Example {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-        
+
         /// <summary>
         /// litError control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace OfficeClip.OpenSource.Example {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal litError;
-        
+
         /// <summary>
         /// litAccessToken control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace OfficeClip.OpenSource.Example {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal litAccessToken;
-        
+
         /// <summary>
         /// litState control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace OfficeClip.OpenSource.Example {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal litState;
-        
+
         /// <summary>
         /// litFullName control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace OfficeClip.OpenSource.Example {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal litFullName;
-        
+
         /// <summary>
         /// litEmail control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace OfficeClip.OpenSource.Example {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal litEmail;
-        
+
         /// <summary>
         /// litDirectoryString control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace OfficeClip.OpenSource.Example {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal litDirectoryString;
-        
+
         /// <summary>
         /// litCalendarString control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace OfficeClip.OpenSource.Example {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal litCalendarString;
-        
+
         /// <summary>
         /// litContactString control.
         /// </summary>
