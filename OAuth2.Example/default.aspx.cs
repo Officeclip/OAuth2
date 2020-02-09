@@ -11,6 +11,7 @@ namespace OfficeClip.OpenSource.OAuth2.Example
         {
             var element = Utils.LoadConfigurationFromWebConfig("Google"); //Test Google
             var client = new Google(element.ClientId, element.ClientSecret, element.Scope, element.RedirectUri);
+            client.ForceRefreshToken = true;
             //var element = Utils.LoadConfigurationFromWebConfig("WindowsLive"); // Test Live
             //var client = new WindowsLive(element.ClientId, element.ClientSecret, element.Scope, element.RedirectUri);
             //client.ForceRefreshToken = true;
