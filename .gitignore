@@ -12,3 +12,5 @@
 /OAuth2.Services/bin
 /OAuth2.Services/obj/Release
 /OAuth2.Example/oAuth2Settings.config
+/OAuth2.Lib/OfficeClip.OpenSource.OAuth2.Lib.1.1.0.nupkg
+/OAuth2.Services/OfficeClip.OpenSource.OAuth2.Services.1.1.0.nupkg
