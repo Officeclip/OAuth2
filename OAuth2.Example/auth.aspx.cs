@@ -10,14 +10,18 @@ using MailKit;
 
 namespace OfficeClip.OpenSource.OAuth2.Example
 {
-    public partial class auth : System.Web.UI.Page
+    public partial class Auth : System.Web.UI.Page
     {
         protected string ImageHtml;
         protected string ImageResizedHtml;
         protected void Page_Load(object sender, EventArgs e)
         {
             var element = Utils.LoadConfigurationFromWebConfig("Google");
-            var client = new Google(element.ClientId, element.ClientSecret, element.Scope, element.RedirectUri);
+            var client = new Google(
+                                element.ClientId, 
+                                element.ClientSecret, 
+                                element.Scope, 
+                                element.RedirectUri);
             //var element = Utils.LoadConfigurationFromWebConfig("WindowsLive");
             //var client = new WindowsLive(element.ClientId, element.ClientSecret, element.Scope, element.RedirectUri);
             var client1 = new SmtpClient(new ProtocolLogger(@"c:\temp\smtplog\smtp.log"));

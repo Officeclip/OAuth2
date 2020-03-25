@@ -11,7 +11,7 @@ namespace OfficeClip.OpenSource.OAuth2.Example
 {
 
 
-    public partial class auth
+    public partial class Auth
     {
 
         /// <summary>
