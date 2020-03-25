@@ -24,7 +24,7 @@ namespace OfficeClip.OpenSource.OAuth2.Example
                                 element.RedirectUri);
             //var element = Utils.LoadConfigurationFromWebConfig("WindowsLive");
             //var client = new WindowsLive(element.ClientId, element.ClientSecret, element.Scope, element.RedirectUri);
-            var client1 = new SmtpClient(new ProtocolLogger(@"c:\temp\smtplog\smtp.log"));
+            var client1 = new SmtpClient(new ProtocolLogger(@"c:\temp\smtp.log"));
             try
             {
                 client.HandleAuthorizationCodeResponse();
