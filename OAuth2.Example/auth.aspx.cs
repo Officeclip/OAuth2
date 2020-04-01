@@ -33,7 +33,7 @@ namespace OfficeClip.OpenSource.OAuth2.Example
                 var message = new MimeKit.MimeMessage();
                 message.From.Add(new MailboxAddress("SK Dutta", "skd@officeclip.com"));
                 message.To.Add(new MailboxAddress("SK Dutta", "skdutta@gmail.com"));
-                message.Subject = "Test Subject 110010";
+                message.Subject = "Test Subject 210010";
                 message.Body = new TextPart("plain") { Text = @"Hey" };
                 using (client1)
                 {
