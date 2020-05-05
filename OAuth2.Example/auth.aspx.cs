@@ -32,7 +32,8 @@ namespace OfficeClip.OpenSource.OAuth2.Example
                 litState.Text = client.GetStateObject(string.Empty).GetValue("one");
                 var message = new MimeKit.MimeMessage();
                 message.From.Add(new MailboxAddress("SK Dutta", "skd@officeclip.com"));
-                message.To.Add(new MailboxAddress("SK Dutta", "skdutta@gmail.com"));
+                //message.To.Add(new MailboxAddress("SK Dutta", "skdutta@gmail.com"));
+                message.To.Add(new MailboxAddress("Kim Jung", "kimjung@koreanmail.com"));
                 message.Subject = "Test Subject 210010";
                 message.Body = new TextPart("plain") { Text = @"Hey" };
                 using (client1)
