@@ -47,6 +47,9 @@ namespace OfficeClip.OpenSource.OAuth2.Lib
                 string parameterData = BuildQueryString(parameters) ?? string.Empty;
                 if (isPost)
                 {
+                    ServicePointManager.Expect100Continue = true;
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
                     request = WebRequest.Create(url);
                     byte[] data = Encoding.ASCII.GetBytes(parameterData);
                     request.Method = "POST";
