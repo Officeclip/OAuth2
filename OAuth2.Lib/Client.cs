@@ -22,6 +22,8 @@ namespace OfficeClip.OpenSource.OAuth2.Lib
         public bool IsAuthorized { get; private set; }
         public bool IsValidateAccessToken { get; set; }
 
+        public string CodeResponse { get; set; }
+
         /// <summary>
         /// The current request object to use throughout the library.
         /// </summary>
@@ -215,6 +217,7 @@ namespace OfficeClip.OpenSource.OAuth2.Lib
             {
                 try
                 {
+                    CodeResponse = response;
                     var codeResponse = new JavaScriptSerializer().Deserialize<CodeResponse>(response);
 
                     if (!string.IsNullOrWhiteSpace(codeResponse.Access_Token))

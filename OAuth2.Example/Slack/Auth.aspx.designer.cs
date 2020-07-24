@@ -42,6 +42,33 @@ namespace OfficeClip.OpenSource.OAuth2.Example.Slack
         protected global::System.Web.UI.WebControls.Literal litAccessToken;
 
         /// <summary>
+        /// litTeamName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litTeamName;
+
+        /// <summary>
+        /// litChannelName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litChannelName;
+
+        /// <summary>
+        /// litWebhook control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litWebhook;
+
+        /// <summary>
         /// btnSend control.
         /// </summary>
         /// <remarks>

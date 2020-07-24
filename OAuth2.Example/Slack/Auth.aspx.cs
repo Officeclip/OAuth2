@@ -7,6 +7,7 @@ using MailKit.Security;
 using MimeKit;
 using MailKit;
 using System.Management.Instrumentation;
+using devmon_library;
 //using OpenNetTools.OAuth2.Services.Google.Contacts;
 
 namespace OfficeClip.OpenSource.OAuth2.Example.Slack
@@ -27,6 +28,9 @@ namespace OfficeClip.OpenSource.OAuth2.Example.Slack
             {
                 client.HandleAuthorizationCodeResponse();
                 litAccessToken.Text = client.AccessToken;
+                litChannelName.Text = client.GetChannelName();
+                litTeamName.Text = client.GetTeamName();
+                litWebhook.Text = client.GetWebhookUrl();
             }
             finally
             {

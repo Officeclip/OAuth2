@@ -16,7 +16,16 @@
             Access Token (from Authorization Code):
             <asp:Literal ID="litAccessToken" runat="server" />
         </div>
-       
+        <div>
+            <strong>Connected to: </strong>
+            <asp:Literal ID="litTeamName" runat="server" /> &nbsp;
+            <label> -- </label>
+            <asp:Literal ID="litChannelName" runat="server"></asp:Literal>
+        </div>
+       <div>
+            <strong>Webhook url: </strong>
+            <asp:Literal ID="litWebhook" runat="server" /> &nbsp;
+        </div>
         <br />
         <div>
             <asp:Button ID="btnSend" Text="Send Message" runat="server" Width="100px" OnClick="btnSend_Click"/>
