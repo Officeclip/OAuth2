@@ -29,6 +29,10 @@ namespace OfficeClip.OpenSource.OAuth2.Lib
         /// URL for user infomation gathering.
         /// </summary>
         public string UserInfoUrl { get; set; }
+
+        public string ChannelListUrl { get; set; }
+
+        public string ChatUrl { get; set; }
     }
 
 }

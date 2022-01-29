@@ -60,6 +60,8 @@
     <Compile Include="Google\Contacts\ContactsGroup.cs" />
     <Compile Include="Google\Directory\DomainUsers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Slack\ChannelList.cs" />
+    <Compile Include="Slack\Messaging.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OAuth2.Lib\OAuth2.Lib.csproj">
