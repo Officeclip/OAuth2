@@ -55,27 +55,27 @@ namespace OfficeClip.OpenSource.OAuth2.Example
             finally
             {
             }
-            //try
-            //{
-            //    UserInfo userInfo = client.GetUserInfo();
-            //    litFullName.Text = userInfo.FullName;
-            //    litEmail.Text = userInfo.Email;
-            //    ProfilePicture picture = new ProfilePicture(userInfo.PictureUrl, true);
-            //    ImageHtml = picture.HtmlPart;
-            //    picture.Resize(200);
-            //    ImageResizedHtml = picture.HtmlPart;
-            //    //DomainUsers googleDomainUsers = new DomainUsers(client.AccessToken);
-            //    //litDirectoryString.Text = googleDomainUsers.ToJsonString();
-            //}
-            //catch (WebException webEx)
-            //{
-            //    HttpError httpError = new HttpError(webEx.Response);
-            //    litError.Text = httpError.StatusDescription;
-            //}
-            //catch (Exception ex)
-            //{
-            //    litError.Text = ex.Message;
-            //}
+            try
+            {
+                UserInfo userInfo = client.GetUserInfo();
+                litFullName.Text = userInfo.FullName;
+                litEmail.Text = userInfo.Email;
+                ProfilePicture picture = new ProfilePicture(userInfo.PictureUrl, true);
+                ImageHtml = picture.HtmlPart;
+                picture.Resize(200);
+                ImageResizedHtml = picture.HtmlPart;
+                //DomainUsers googleDomainUsers = new DomainUsers(client.AccessToken);
+                //litDirectoryString.Text = googleDomainUsers.ToJsonString();
+            }
+            catch (WebException webEx)
+            {
+                HttpError httpError = new HttpError(webEx.Response);
+                litError.Text = httpError.StatusDescription;
+            }
+            catch (Exception ex)
+            {
+                litError.Text = ex.Message;
+            }
 
             //CalendarList calendarList = new CalendarList(client.AccessToken);
             //litCalendarString.Text = calendarList.ToJsonString();
