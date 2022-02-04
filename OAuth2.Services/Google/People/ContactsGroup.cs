@@ -4,13 +4,11 @@ using System.Collections.Generic;
 using OfficeClip.OpenSource.OAuth2.Lib;
 using System.Web.Script.Serialization;
 
-namespace OfficeClip.OpenSource.OAuth2.Services.Google.Contacts
+namespace OfficeClip.OpenSource.OAuth2.Services.Google.People
 {
     public class ContactsGroup
     {
         private const string endpointUrl = "https://people.googleapis.com/v1/contactGroups";
-        public const string ScopeReadOnly = "https://www.googleapis.com/auth/contacts.readonly";
-        public const string ScopeReadWrite = "https://www.googleapis.com/auth/contacts";
         public List<Entry> Entries;
         private readonly HttpAuthResponse response;
 

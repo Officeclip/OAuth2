@@ -16,3 +16,5 @@
 /OAuth2.Services/OfficeClip.OpenSource.OAuth2.Services.1.1.0.nupkg
 /OAuth2.Lib/*.user
 /OAuth2.Lib/*.nupkg
+/OAuth2.Example/*.user
+/OAuth2.Google/obj/Debug
