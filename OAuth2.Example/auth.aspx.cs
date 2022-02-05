@@ -6,6 +6,7 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using MailKit;
+using OfficeClip.OpenSource.OAuth2.Services.Google.People;
 //using OpenNetTools.OAuth2.Services.Google.Contacts;
 
 namespace OfficeClip.OpenSource.OAuth2.Example
@@ -58,13 +59,14 @@ namespace OfficeClip.OpenSource.OAuth2.Example
             }
             try
             {
-                UserInfo userInfo = client.GetUserInfo();
-                litFullName.Text = userInfo.FullName;
-                litEmail.Text = userInfo.Email;
-                ProfilePicture picture = new ProfilePicture(userInfo.PictureUrl, true);
-                ImageHtml = picture.HtmlPart;
-                picture.Resize(200);
-                ImageResizedHtml = picture.HtmlPart;
+                ContactsGroup contacts = new ContactsGroup(client.AccessToken);
+                //UserInfo userInfo = client.GetUserInfo();
+                //litFullName.Text = userInfo.FullName;
+                //litEmail.Text = userInfo.Email;
+                //ProfilePicture picture = new ProfilePicture(userInfo.PictureUrl, true);
+                //ImageHtml = picture.HtmlPart;
+                //picture.Resize(200);
+                //ImageResizedHtml = picture.HtmlPart;
                 //DomainUsers googleDomainUsers = new DomainUsers(client.AccessToken);
                 //litDirectoryString.Text = googleDomainUsers.ToJsonString();
             }
