@@ -9,8 +9,8 @@ namespace OfficeClip.OpenSource.OAuth2.Services.Google.People
     public class ContactsGroup
     {
         private const string endpointUrl = "https://people.googleapis.com/v1/contactGroups";
-        public List<Entry> Entries;
         private readonly HttpAuthResponse response;
+        private string _accessToken;
 
         public ContactsGroup(string accessToken)
         {
@@ -18,39 +18,36 @@ namespace OfficeClip.OpenSource.OAuth2.Services.Google.People
             {
                 throw new Exception("Access Token is required to get user info");
             }
+            _accessToken = accessToken;
+        }
+
+        public List<Tuple<string, string>> Get()
+        {
+            var entries = new List<Tuple<string, string>>();
             var parameters = new Dictionary<string, string> {
                 { "alt", "json" }
             };
-            response = Utils.MakeWebRequest(endpointUrl, parameters, false, accessToken);
+            var response = Utils.MakeWebRequest(endpointUrl, parameters, false, _accessToken);
             if (response != null)
             {
                 var serializer = new JavaScriptSerializer();
                 var contactFeed = serializer.Deserialize<Dictionary<string, object>>(ToJsonString());
-                var feed = (Dictionary < string, object>)contactFeed["feed"];
+                var feed = (Dictionary<string, object>)contactFeed["feed"];
                 var entry = (ArrayList)feed["entry"];
-                Entries = new List<Entry>();
                 foreach (Dictionary<string, object> entryItem in entry)
                 {
                     var id = (Dictionary<string, object>)entryItem["id"];
-                    var title = (Dictionary <string, object>) entryItem["title"];
-                    var group = new Entry
-                                  {
-                                      Id = (string) id["$t"],
-                                      Name = (string) title["$t"]
-                                  };
-                    Entries.Add(group);
+                    var title = (Dictionary<string, object>)entryItem["title"];
+                    var group = new Tuple<string, string>((string)id["$t"], (string)title["$t"]);
+                    entries.Add(group);
                 }
             }
-        }
-        public string ToJsonString()
-        {
-            return response.ResponseString ?? string.Empty;
+            return entries;
         }
 
-        public class Entry
+        private string ToJsonString()
         {
-            public string Id;
-            public string Name;
+            return response.ResponseString ?? string.Empty;
         }
 
     }
