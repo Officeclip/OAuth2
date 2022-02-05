@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth2.Example", "OAuth2.Ex
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth2.Services", "OAuth2.Services\OAuth2.Services.csproj", "{D6B705EA-01DB-4C3F-BAA2-B17EDEACCFCD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth2.Google", "OAuth2.Google\OAuth2.Google.csproj", "{4D24EDCB-530B-4AD0-9511-BC233E891EF6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth2.CSharp", "OAuth2.Google\OAuth2.CSharp.csproj", "{4D24EDCB-530B-4AD0-9511-BC233E891EF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
