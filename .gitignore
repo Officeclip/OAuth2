@@ -18,3 +18,4 @@
 /OAuth2.Lib/*.nupkg
 /OAuth2.Example/*.user
 /OAuth2.Google/obj/Debug
+/OAuth2.Google/bin/Debug
