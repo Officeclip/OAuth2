@@ -7,8 +7,8 @@
     <ProjectGuid>{4D24EDCB-530B-4AD0-9511-BC233E891EF6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OAuth2.Google</RootNamespace>
-    <AssemblyName>OAuth2.Google</AssemblyName>
+    <RootNamespace>OAuth2.CSharp</RootNamespace>
+    <AssemblyName>OAuth2.CSharp</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
