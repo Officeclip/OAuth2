@@ -150,6 +150,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OAuth2.CSharp\OAuth2.CSharp.csproj">
+      <Project>{4d24edcb-530b-4ad0-9511-bc233e891ef6}</Project>
+      <Name>OAuth2.CSharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OAuth2.Lib\OAuth2.Lib.csproj">
       <Project>{0eaf0692-d55e-4229-9587-5a7e76260cc6}</Project>
       <Name>OAuth2.Lib</Name>

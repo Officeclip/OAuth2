@@ -7,6 +7,7 @@ using MailKit.Security;
 using MimeKit;
 using MailKit;
 using OfficeClip.OpenSource.OAuth2.Services.Google.People;
+using OfficeClip.OpenSource.OAuth2.CSharp.Google.People;
 //using OpenNetTools.OAuth2.Services.Google.Contacts;
 
 namespace OfficeClip.OpenSource.OAuth2.Example
@@ -59,7 +60,16 @@ namespace OfficeClip.OpenSource.OAuth2.Example
             }
             try
             {
-                ContactsGroup contacts = new ContactsGroup(client.AccessToken);
+                var peopleContact = new Contact(
+                                            element.ClientId,
+                                            element.ClientSecret,
+                                            element.Scope.Split(" ".ToCharArray()),
+                                            client.AccessToken,
+                                            string.Empty
+                                            );
+                var groups = string.Join(",", peopleContact.GroupNames); ;
+                litFullName.Text = groups;
+                //ContactsGroup contacts = new ContactsGroup(client.AccessToken);
                 //UserInfo userInfo = client.GetUserInfo();
                 //litFullName.Text = userInfo.FullName;
                 //litEmail.Text = userInfo.Email;
