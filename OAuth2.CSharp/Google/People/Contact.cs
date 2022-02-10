@@ -5,6 +5,7 @@ using Google.Apis.Services;
 using System;
 using System.Collections.Generic;
 using Google.Apis.PeopleService.v1;
+using Google.Apis.PeopleService.v1.Data;
 
 namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
 {
@@ -93,6 +94,18 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
                 }
                 return contacts;
             }
+        }
+
+
+        public void CreateContact()
+        {
+            Person contactToCreate = new Person();
+            List<Name> names = new List<Name>();
+            names.Add(new Name() { GivenName = "John", FamilyName = "Doe" });
+            contactToCreate.Names = names;
+
+            PeopleResource.CreateContactRequest request = new PeopleResource.CreateContactRequest(_service, contactToCreate);
+            Person createdContact = request.Execute();
         }
 
     }

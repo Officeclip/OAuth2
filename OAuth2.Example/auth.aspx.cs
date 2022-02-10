@@ -67,8 +67,10 @@ namespace OfficeClip.OpenSource.OAuth2.Example
                                             client.AccessToken,
                                             string.Empty
                                             );
-                var groups = string.Join(",", peopleContact.GroupNames); ;
-                litFullName.Text = groups;
+                var groups = string.Join(",", peopleContact.GroupNames);
+                var contactList = string.Join(",", peopleContact.ContactList);
+                litFullName.Text = contactList;
+                peopleContact.CreateContact();
                 //ContactsGroup contacts = new ContactsGroup(client.AccessToken);
                 //UserInfo userInfo = client.GetUserInfo();
                 //litFullName.Text = userInfo.FullName;
