@@ -104,7 +104,20 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
             names.Add(new Name() { GivenName = "John", FamilyName = "Doe" });
             contactToCreate.Names = names;
 
-            PeopleResource.CreateContactRequest request = new PeopleResource.CreateContactRequest(_service, contactToCreate);
+            var contactGroupMembership = new ContactGroupMembership()
+            {
+                ContactGroupResourceName = "contactGroups / 35a812fa89a9b306"
+            };
+
+            contactToCreate.Memberships = new List<Membership>();
+            var memberShip = new Membership()
+            {
+                ContactGroupMembership = contactGroupMembership
+            };
+            contactToCreate.Memberships.Add(memberShip);
+
+            PeopleResource.CreateContactRequest request = 
+                new PeopleResource.CreateContactRequest(_service, contactToCreate);
             Person createdContact = request.Execute();
         }
 
