@@ -146,23 +146,29 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
 
         public void UpdateContact()
         {
-            Person contactToUpdate = _service.People.Get("people/c9202708945039554846").Execute();
+            var contactService = _service
+                                        .People
+                                        .Get("people/c3876679269487129059");
+            contactService.PersonFields = "names";
+            var contactToUpdate = contactService.Execute();
 
             List<Name> names = new List<Name>();
-            names.Add(new Name() { HonorificPrefix = "Mr.", GivenName = "Nagesh", FamilyName = "Kulkarni" });
+            names.Add(new Name() { HonorificPrefix = "Mr.", GivenName = "Raymond", FamilyName = "Schultzz" });
             contactToUpdate.Names = names;
 
-            List<EmailAddress> emailAddresses = new List<EmailAddress>();
-            emailAddresses.Add(new EmailAddress() { Value = "nagesh@officeclip.com" });
-            contactToUpdate.EmailAddresses = emailAddresses;
+            //List<EmailAddress> emailAddresses = new List<EmailAddress>();
+            //emailAddresses.Add(new EmailAddress() { Value = "nagesh@officeclip.com" });
+            //contactToUpdate.EmailAddresses = emailAddresses;
 
-            List<PhoneNumber> phoneNumbers = new List<PhoneNumber>();
-            phoneNumbers.Add(new PhoneNumber() { Value = "9876543210" });
-            contactToUpdate.PhoneNumbers = phoneNumbers;
-
+            //List<PhoneNumber> phoneNumbers = new List<PhoneNumber>();
+            //phoneNumbers.Add(new PhoneNumber() { Value = "9876543210" });
+            //contactToUpdate.PhoneNumbers = phoneNumbers;
+            
             PeopleResource.UpdateContactRequest updateContactRequest = 
                 new PeopleResource.UpdateContactRequest(_service, contactToUpdate, contactToUpdate.ResourceName);
-
+            updateContactRequest.UpdatePersonFields = "names";
+            //updateContactRequest.PersonFields = "emailAddresses";
+            //updateContactRequest.Fields = "emailAddresses";
             Person updatedContact = updateContactRequest.Execute();
         }
     }
