@@ -70,7 +70,8 @@ namespace OfficeClip.OpenSource.OAuth2.Example
                 //var groups = string.Join(",", peopleContact.GroupNames);
                 //var contactList = string.Join(",", peopleContact.ContactList);
                 //litFullName.Text = contactList;
-                peopleContact.CreateContact();
+                //peopleContact.CreateContact();
+                peopleContact.UpdateContact();
                 //ContactsGroup contacts = new ContactsGroup(client.AccessToken);
                 //UserInfo userInfo = client.GetUserInfo();
                 //litFullName.Text = userInfo.FullName;
