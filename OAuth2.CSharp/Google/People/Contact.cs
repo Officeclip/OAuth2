@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using Google.Apis.PeopleService.v1;
 using Google.Apis.PeopleService.v1.Data;
+using System.Data;
+using System.IO;
 
 namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
 {
@@ -16,6 +18,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
     public class Contact
     {
         private PeopleServiceService _service;
+        private DataSet dsSchema;
         public Contact(
             string clientId,
             string clientSecret,
@@ -51,11 +54,21 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
                     HttpClientInitializer = credential,
                     ApplicationName = "Test Application",
                 });
+
+                PopulateDataSet("Contact.xsd");
             }
             catch (Exception ex)
             {                
                 throw new Exception("Contact constructor failed", ex);
             }
+        }
+
+        private void PopulateDataSet(string schemaFileLocation)
+        {
+            dsSchema = new DataSet();
+            StringReader sr = new StringReader
+                (schemaFileLocation);
+            dsSchema.ReadXmlSchema(sr);
         }
 
         public List<string> GroupNames
@@ -74,6 +87,60 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
                 }
                 return groupNames;
             }
+        }
+
+        /// <summary>
+        /// Get all the Google Contacts signature and return the dataset, only populate the sid, first-name, last name
+        /// and emailAddress
+        /// </summary>
+        /// <remarks> Check the contact driver file on how to implemetn this</remarks>
+        /// <returns></returns>
+        public DataSet GetSignature()
+        {
+            //mLogger?.WriteMethod(serviceType, dsSchema);
+            //try
+            //{
+            //    ContactsRequest contactRequest = new ContactsRequest(requestSetting);
+            //    GetAllContacts(contactRequest);
+            //    foreach (Contact contactItem in contactFeed.Entries)
+            //    {
+            //        DataRow dr = dsSchema.Tables[0].NewRow();
+            //        FillReturnDataRow(dr, contactItem);
+            //        dsSchema.Tables[0].Rows.Add(dr);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    mLogger?.WriteError(
+            //        "Driver.Google.ContactDriver.GetSignature",
+            //        $"Error: {ex.Message}");
+            //}
+            return dsSchema;
+        }
+
+        /// <summary>
+        /// Return everything that is determined by the schema
+        /// </summary>
+        /// <param name="sids"></param>
+        /// <returns></returns>
+        public DataSet GetDataByKey(string sids)
+        {
+            return null;
+        }
+
+        public bool Delete(List<string> resourceNames)
+        {
+            return false;
+        }
+
+        public bool Insert(DataSet dsSchema)
+        {
+            return false;
+        }
+
+        public bool Update(DataSet dsSchema)
+        {
+            return false;
         }
 
         public List<string> ContactList
@@ -95,7 +162,6 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
                 return contacts;
             }
         }
-
 
         public void CreateContact()
         {

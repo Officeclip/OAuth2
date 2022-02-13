@@ -87,6 +87,7 @@
     <Content Include="oAuth2Settings.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="dynamic.config" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
