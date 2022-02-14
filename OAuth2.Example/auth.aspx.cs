@@ -8,6 +8,7 @@ using MimeKit;
 using MailKit;
 using OfficeClip.OpenSource.OAuth2.Services.Google.People;
 using OfficeClip.OpenSource.OAuth2.CSharp.Google.People;
+using System.Configuration;
 //using OpenNetTools.OAuth2.Services.Google.Contacts;
 
 namespace OfficeClip.OpenSource.OAuth2.Example
@@ -71,7 +72,8 @@ namespace OfficeClip.OpenSource.OAuth2.Example
                 //var contactList = string.Join(",", peopleContact.ContactList);
                 //litFullName.Text = contactList;
                 //peopleContact.CreateContact();
-                peopleContact.UpdateContact();
+                peopleContact.UpdateContact(
+                                    ConfigurationManager.AppSettings["Test1"]);
                 //ContactsGroup contacts = new ContactsGroup(client.AccessToken);
                 //UserInfo userInfo = client.GetUserInfo();
                 //litFullName.Text = userInfo.FullName;

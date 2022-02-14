@@ -1,4 +1,5 @@
 ﻿using System;
+using NLog;
 using OfficeClip.OpenSource.OAuth2.Lib;
 using OfficeClip.OpenSource.OAuth2.Lib.Provider;
 
@@ -7,8 +8,11 @@ namespace OfficeClip.OpenSource.OAuth2.Example.Slack
     public partial class Default : System.Web.UI.Page
     {
         protected string ImageHtml;
+        //private static Logger logger =
+        //                          LogManager.GetCurrentClassLogger();
         protected void Page_Load(object sender, EventArgs e)
         {
+            //logger.Debug("Test");
             var element = Utils.LoadConfigurationFromWebConfig("Slack"); //Test Google
             var client = new OAuth2.Lib.Provider.Slack(
                                 element.ClientId, 

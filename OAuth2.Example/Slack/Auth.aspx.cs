@@ -8,6 +8,7 @@ using MimeKit;
 using MailKit;
 using System.Management.Instrumentation;
 using devmon_library;
+using NLog;
 //using OpenNetTools.OAuth2.Services.Google.Contacts;
 
 namespace OfficeClip.OpenSource.OAuth2.Example.Slack
@@ -16,8 +17,11 @@ namespace OfficeClip.OpenSource.OAuth2.Example.Slack
     {
         protected string ImageHtml;
         protected string ImageResizedHtml;
+        //private static Logger logger =
+        //                          LogManager.GetCurrentClassLogger();
         protected void Page_Load(object sender, EventArgs e)
         {
+            //logger.Debug("Test");
             var element = Utils.LoadConfigurationFromWebConfig("Slack");
             var client = new OAuth2.Lib.Provider.Slack(
                                     element.ClientId,
