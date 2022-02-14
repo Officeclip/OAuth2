@@ -70,22 +70,28 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
         {
             get
             {
-                //var groupsResource = new ContactGroupsResource(_service);
-                //var listRequest = groupsResource.List();
-                //var response = listRequest.Execute();
+                var groupsResource = new ContactGroupsResource(_service);
+                var listRequest = groupsResource.List();
+                var response = listRequest.Execute();
 
-                //// eg to show name of each group
-                //var groupNames = new List<string>();
-                //foreach (var group in response.ContactGroups)
-                //{
-                //    groupNames.Add(group.FormattedName);
-                //}
-                return null;
+                var contactGroupInfos = new List<ContactGroupInfo>();
+                foreach (var group in response.ContactGroups)
+                {
+                    var contactGroupInfo = new ContactGroupInfo()
+                    {
+                        Name = group.FormattedName,
+                        SId = group.ResourceName,
+                        ETag = group.ETag,
+                        NumberOfContacts = group.MemberCount
+                    };
+                    contactGroupInfos.Add(contactGroupInfo);
+                }
+                return contactGroupInfos;
             }
         }
 
         /// <summary>
-        /// Get all the Google Contacts Sid and Full Name
+        /// Get all the Google Contacts Sid and etag
         /// </summary>
         /// <remarks> Check the contact driver file on how to implemetn this</remarks>
         /// <returns></returns>
@@ -137,28 +143,55 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
             return false;
         }
 
-        public List<ContactInfo> ContactList
+        public ContactInfo GetContact(string sid)
+        {
+            var peopleRequest =
+                    _service.People.Get(sid);
+            peopleRequest.PersonFields = "names,emailAddresses";
+            var people = peopleRequest.Execute();
+            var contactInfo = new ContactInfo()
+            {
+                SId = people.ResourceName,
+                ETag = people.ETag
+            };
+            if (
+                (people.Names != null) && 
+                (people.Names.Count > 0))
+            {
+                contactInfo.FirstName = people.Names[0].GivenName;
+                contactInfo.LastName = people.Names[0].FamilyName;
+            }
+            if (
+                (people.EmailAddresses != null) &&
+                (people.EmailAddresses.Count > 0))
+            {
+                contactInfo.EmailAddress = people.EmailAddresses[0].Value;
+            }
+            return contactInfo;
+        }
+
+        public List<string> ContactList
         {
             get
             {
-                //var peopleRequest =
-                //    _service.People.Connections.List("people/me");
-                //peopleRequest.PersonFields = "names,emailAddresses";
-                //peopleRequest.SortOrder = (PeopleResource.ConnectionsResource.ListRequest.SortOrderEnum)1;
-                //var people = peopleRequest.Execute();
+                //    var peopleRequest =
+                //        _service.People.Connections.List("people/me");
+                //    peopleRequest.PersonFields = "names,emailAddresses";
+                //    peopleRequest.SortOrder = (PeopleResource.ConnectionsResource.ListRequest.SortOrderEnum)1;
+                //    var people = peopleRequest.Execute();
 
-                //// eg to show display name of each contact
-                //var contacts = new List<string>();
-                //foreach (var person in people.Connections)
-                //{
-                //    contacts.Add(person.Names[0].DisplayName);
-                //}
-                //return contacts;
+                //    // eg to show display name of each contact
+                //    var contacts = new List<string>();
+                //    foreach (var person in people.Connections)
+                //    {
+                //        contacts.Add(person.Names[0].DisplayName);
+                //    }
+                //    return contacts;
                 return null;
             }
         }
 
-        public void CreateContact()
+        public void CreateContact(string contactGroupResource)
         {
             Person contactToCreate = new Person();
 
@@ -188,7 +221,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
             
             var contactGroupMembership = new ContactGroupMembership()
             {
-                ContactGroupResourceName = "contactGroups/7ca636f18d719084"
+                ContactGroupResourceName = contactGroupResource
             };
 
             contactToCreate.Memberships = new List<Membership>();

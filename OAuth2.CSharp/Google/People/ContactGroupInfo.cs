@@ -16,5 +16,13 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
         {
             get; set;
         }
+        public string ETag
+        {
+            get;set;
+        }
+        public int? NumberOfContacts
+        {
+            get;set;
+        }
     }
 }

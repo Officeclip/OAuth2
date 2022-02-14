@@ -9,6 +9,7 @@ using MailKit;
 using OfficeClip.OpenSource.OAuth2.Services.Google.People;
 using OfficeClip.OpenSource.OAuth2.CSharp.Google.People;
 using System.Configuration;
+using devmon_library;
 //using OpenNetTools.OAuth2.Services.Google.Contacts;
 
 namespace OfficeClip.OpenSource.OAuth2.Example
@@ -68,12 +69,20 @@ namespace OfficeClip.OpenSource.OAuth2.Example
                                             client.AccessToken,
                                             string.Empty
                                             );
-                //var groups = string.Join(",", peopleContact.GroupNames);
+                //var contactGroups = peopleContact.ContactGroups;
+
+                var contact = peopleContact.GetContact(
+                                                ConfigurationManager.AppSettings["Test1"]);
+                litFullName.Text = ObjectDumper.Dump(contact);
+
+                //var groups = string.Join(",", peopleContact.ContactGroups);
+                //litFullName.Text = ObjectDumper.Dump(contactGroups);
+
                 //var contactList = string.Join(",", peopleContact.ContactList);
                 //litFullName.Text = contactList;
                 //peopleContact.CreateContact();
-                peopleContact.UpdateContact(
-                                    ConfigurationManager.AppSettings["Test1"]);
+                //peopleContact.UpdateContact(
+                //                    ConfigurationManager.AppSettings["Test1"]);
                 //ContactsGroup contacts = new ContactsGroup(client.AccessToken);
                 //UserInfo userInfo = client.GetUserInfo();
                 //litFullName.Text = userInfo.FullName;
