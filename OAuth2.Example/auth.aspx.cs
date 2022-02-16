@@ -10,6 +10,7 @@ using OfficeClip.OpenSource.OAuth2.Services.Google.People;
 using OfficeClip.OpenSource.OAuth2.CSharp.Google.People;
 using System.Configuration;
 using devmon_library;
+using System.Collections.Generic;
 //using OpenNetTools.OAuth2.Services.Google.Contacts;
 
 namespace OfficeClip.OpenSource.OAuth2.Example
@@ -33,6 +34,7 @@ namespace OfficeClip.OpenSource.OAuth2.Example
             {
                 client.HandleAuthorizationCodeResponse();
                 litAccessToken.Text = client.AccessToken;
+                litRefreshToken.Text = client.RefreshToken;
                 litState.Text = client.GetStateObject(string.Empty).GetValue("one");
                 //var message = new MimeKit.MimeMessage();
                 //message.From.Add(new MailboxAddress("SK Dutta", "skd@officeclip.com"));
@@ -71,9 +73,23 @@ namespace OfficeClip.OpenSource.OAuth2.Example
                                             );
                 //var contactGroups = peopleContact.ContactGroups;
 
-                var contact = peopleContact.GetContact(
-                                                ConfigurationManager.AppSettings["Test1"]);
-                litFullName.Text = ObjectDumper.Dump(contact);
+                //var contact = peopleContact.GetContact(
+                //                                ConfigurationManager.AppSettings["Contact"]);
+                //litFullName.Text = ObjectDumper.Dump(contact);
+
+                //List<ContactInfo> contactInfoList = new List<ContactInfo>();
+
+                var isCreateContact = peopleContact.Insert(ConfigurationManager.AppSettings["ContactGroup"]);
+                if (isCreateContact == true)
+                {
+                    litFullName.Text = ObjectDumper.Dump(isCreateContact);
+                }
+
+                //bool isUpdateContact = peopleContact.Update(contact);
+                //if (isUpdateContact == true)
+                //{
+                //    litFullName.Text = ObjectDumper.Dump(contact);
+                //}
 
                 //var groups = string.Join(",", peopleContact.ContactGroups);
                 //litFullName.Text = ObjectDumper.Dump(contactGroups);
@@ -82,7 +98,7 @@ namespace OfficeClip.OpenSource.OAuth2.Example
                 //litFullName.Text = contactList;
                 //peopleContact.CreateContact();
                 //peopleContact.UpdateContact(
-                //                    ConfigurationManager.AppSettings["Test1"]);
+                //                    ConfigurationManager.AppSettings["Contact"]);
                 //ContactsGroup contacts = new ContactsGroup(client.AccessToken);
                 //UserInfo userInfo = client.GetUserInfo();
                 //litFullName.Text = userInfo.FullName;

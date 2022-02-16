@@ -40,6 +40,10 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
         {
             get; set;
         }
+        public string Salutation
+        {
+            get; set;
+        }
         public string Title
         {
             get; set;

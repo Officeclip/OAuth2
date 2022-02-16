@@ -18,6 +18,9 @@
             <br />
             State Value Returned:
             <asp:Literal ID="litState" runat="server" />
+            <br />
+            Refresh Token:
+            <asp:Literal ID="litRefreshToken" runat="server" />
         </div>
         <div>
             Full Name:
