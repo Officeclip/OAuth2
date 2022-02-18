@@ -79,6 +79,14 @@ namespace OfficeClip.OpenSource.OAuth2.Example
 
                 //List<ContactInfo> contactInfoList = new List<ContactInfo>();
 
+                List<string> contactInfoList = new List<string>();
+                //contactInfoList.Add("people/c304565144089597399");
+                //contactInfoList.Add("people/c4635318391136207354");
+                //contactInfoList.Add("people/c4676380728778291940");
+                //contactInfoList.Add("people/c9202708945039554846");
+
+                //var isCreateContact = peopleContact.Delete(contactInfoList);
+
                 var isCreateContact = peopleContact.Insert(ConfigurationManager.AppSettings["ContactGroup"]);
                 if (isCreateContact == true)
                 {
