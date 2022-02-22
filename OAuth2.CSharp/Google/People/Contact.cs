@@ -11,6 +11,10 @@ using System.IO;
 using NLog;
 using System.Linq;
 using System.Net;
+using Google.Apis.Util;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Text;
 
 namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
 {
@@ -21,6 +25,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
     public class Contact
     {
         private PeopleServiceService _service;
+        private UpdateContactPhotoRequest photoBody;
         private static Logger logger =
                                     LogManager.GetCurrentClassLogger();
         private WebClient webClient;
@@ -185,8 +190,6 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
 
         public List<SignatureInfo> Insert(string groupSid, List<ContactInfo> contacts)
         {
-            var contactToCreate = new Person();
-            contacts = new List<ContactInfo>();
             List<SignatureInfo> signatureInfoList = new List<SignatureInfo>();
             foreach (var contact in contacts)
             {
@@ -197,7 +200,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
             return signatureInfoList;
         }
 
-        private List<ContactInfo> ContactsBatchHardCoded()
+        public List<ContactInfo> ContactsBatchHardCoded()
         {
             List<ContactInfo> contactInfos = new List<ContactInfo>();
             contactInfos.Add(new ContactInfo()
@@ -254,6 +257,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
                 OtherZip = "501141",
                 Description = "This is to test create contact in Google Contact.",
             });
+            Insert("contactGroups/7ca636f18d719084", contactInfos);
             return contactInfos;
         }
 
@@ -319,10 +323,6 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
             biographies.Add(new Biography() { Value = contact.Description });
             contactToCreate.Biographies = biographies;
 
-            List<Photo> photos = new List<Photo>();
-            photos.Add(new Photo() { Url = "C:/Users/Nagesh Kulkarni/Downloads/image10.png" });
-            contactToCreate.Photos = photos;
-
             Membership membership = new Membership();
             membership.ContactGroupMembership = new ContactGroupMembership()
             {
@@ -333,191 +333,281 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
             PeopleResource.CreateContactRequest createContactRequest = new PeopleResource.CreateContactRequest(_service, contactToCreate);
             createContactRequest.CreateRequest();
             Person createdContact = createContactRequest.Execute();
+
+            string url = "https://www.google.com/images/logos/ps_logo2.png";
+            var base64Url = GetBase64Image(url);
+
+            List<Photo> photos = new List<Photo>();
+            photos.Add(new Photo() { Url = base64Url });
+            contactToCreate.Photos = photos;
+
+            photoBody = new UpdateContactPhotoRequest
+            {
+                PhotoBytes = base64Url
+            };
+
+            PeopleResource.UpdateContactPhotoRequest updateContactPhotoRequest = new PeopleResource.UpdateContactPhotoRequest(_service, photoBody, createdContact.ResourceName);
+            updateContactPhotoRequest.CreateRequest();
+            var updatedContact = updateContactPhotoRequest.Execute();
+
             var signatureInfo = new SignatureInfo()
             {
-                SId = createdContact.ResourceName,
+                SId = updateContactPhotoRequest.ResourceName,
                 ETag = createdContact.ETag  
             };
             return signatureInfo;       
         }
 
-        public bool Insert(string sid)
+        //public UpdateContactPhotoResponse UpdateImage(string sid)
+        //{
+        //    var contactToCreate = new Person();
+
+        //    string url = "https://www.google.com/images/logos/ps_logo2.png";
+        //    var base64Url = GetBase64Image(url);
+
+        //    List<Photo> photos = new List<Photo>();
+        //    photos.Add(new Photo() { Url = base64Url });
+        //    contactToCreate.Photos = photos;
+
+        //    photoBody = new UpdateContactPhotoRequest
+        //    {
+        //        //ETag = createdContact.ETag,
+        //        //PersonFields = photos,
+        //        PhotoBytes = base64Url
+        //    };
+
+        //    PeopleResource.UpdateContactPhotoRequest updateContactPhotoRequest = new PeopleResource.UpdateContactPhotoRequest(_service, photoBody, sid);
+        //    updateContactPhotoRequest.CreateRequest();
+        //    var updatedContact = updateContactPhotoRequest.Execute();
+
+        //    return updatedContact;
+        //}
+
+        byte[] GetImage(string url)
         {
-            var contactToCreate = new Person();
-            var contactInfo = new ContactInfo()
+            Stream stream = null;
+            byte[] buf;
+
+            try
             {
-                FirstName = "Nagesh",
-                LastName = "Kulkarni",
-                Salutation = "Mr",
-                EmailAddress = "nagesh@officeclip.com",
-                AlternateEmailAddress = "nageshkulkarni123@gmail.com",
-                WorkPhone = "9966321831",
-                AlternateWorkPhone = "8125505421",
-                BirthDate = DateTime.Parse("1-8-1988"),
-                CompanyName = "OfficeClip",
-                Department = "Development",
-                Title = "Software Engineer",
-                Address1 = "H.No: MIG - II - 131",
-                Address2 = "Housing Board Colony",
-                City = "MahaboobNagar",
-                State = "Telangana",
-                Country = "India",
-                Zip = "509001",
-                OtherAddress1 = "H.No 8-10-48",
-                OtherAddress2 = "Inside Gadi, Old Tandur",
-                OtherCity = "Tandur",
-                OtherState = "Telangana",
-                OtherCountry = "India",
-                OtherZip = "501141",
-                Description = "This is to test create contact in Google Contact.",
-            };
+                WebProxy myProxy = new WebProxy();
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
 
-            List<Name> names = new List<Name>();
-            names.Add(new Name()
+                HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+                stream = response.GetResponseStream();
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    stream.CopyTo(ms);
+                    buf = ms.ToArray();
+                }
+
+                stream.Close();
+                response.Close();
+            }
+            catch (Exception exp)
             {
-                HonorificPrefix = contactInfo.Salutation,
-                GivenName = contactInfo.FirstName,
-                FamilyName = contactInfo.LastName
-            });
-            contactToCreate.Names = names;
+                buf = null;
+            }
 
-            List<EmailAddress> emailAddresses = new List<EmailAddress>();
-            emailAddresses.Add(new EmailAddress() { Value = contactInfo.EmailAddress, Type = "Email" });
-            emailAddresses.Add(new EmailAddress() { Value = contactInfo.AlternateEmailAddress, Type = "Alternate Email" });
-            contactToCreate.EmailAddresses = emailAddresses;
-
-            List<PhoneNumber> phoneNumbers = new List<PhoneNumber>();
-            phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.WorkPhone, Type = "mobile" });
-            phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.AlternateWorkPhone, Type = "workMobile" });
-            contactToCreate.PhoneNumbers = phoneNumbers;
-
-            List<Birthday> birthday = new List<Birthday>();
-            birthday.Add(new Birthday() { Text = contactInfo.BirthDate.ToString() });
-            contactToCreate.Birthdays = birthday;
-
-            List<Organization> organization = new List<Organization>();
-            organization.Add(new Organization()
-            {
-                Name = contactInfo.CompanyName,
-                Department = contactInfo.Department,
-                Title = contactInfo.Title
-            });
-            contactToCreate.Organizations = organization;
-
-            List<Address> addresses = new List<Address>();
-            addresses.Add(new Address()
-            {
-                StreetAddress = contactInfo.Address1,
-                ExtendedAddress = contactInfo.Address2,
-                City = contactInfo.City,
-                Region = contactInfo.State,
-                Country = contactInfo.Country,
-                PostalCode = contactInfo.Zip,
-                Type = "work"
-            });
-            addresses.Add(new Address()
-            {
-                StreetAddress = contactInfo.OtherAddress1,
-                ExtendedAddress = contactInfo.OtherAddress2,
-                City = contactInfo.OtherCity,
-                Region = contactInfo.OtherState,
-                Country = contactInfo.OtherCountry,
-                PostalCode = contactInfo.OtherZip,
-                Type = "other"
-            });
-            contactToCreate.Addresses = addresses;
-
-            List<Biography> biographies = new List<Biography>();
-            biographies.Add(new Biography() { Value = contactInfo.Description });
-            contactToCreate.Biographies = biographies;
-
-            List<Photo> photos = new List<Photo>();
-            photos.Add(new Photo() { Url = "C:/Users/Nagesh Kulkarni/Downloads/image10.png" });
-            contactToCreate.Photos = photos;
-
-            Membership membership = new Membership();
-            membership.ContactGroupMembership = new ContactGroupMembership()
-            {
-                ContactGroupResourceName = sid
-            };
-            contactToCreate.Memberships = new List<Membership>();
-            contactToCreate.Memberships.Add(membership);
-            PeopleResource.CreateContactRequest createContactRequest = new PeopleResource.CreateContactRequest(_service, contactToCreate);
-            createContactRequest.CreateRequest();
-            Person createdContact = createContactRequest.Execute();
-            return true;
+            return (buf);
         }
 
-        public bool Update(ContactInfo contactInfo)
+        string GetBase64Image(string image)
         {
-            var peopleRequest =
-                    _service.People.Get(contactInfo.SId);
-            peopleRequest.PersonFields = "names,emailAddresses,addresses,birthdays,organizations,phoneNumbers,biographies";
-            var contactToUpdate = peopleRequest.Execute();
-
-            List<Name> names = new List<Name>();
-            names.Add(new Name()
-            {
-                HonorificPrefix = contactInfo.Salutation,
-                GivenName = contactInfo.FirstName,
-                FamilyName = contactInfo.LastName
-            });
-            contactToUpdate.Names = names;
-
-            List<EmailAddress> emailAddresses = new List<EmailAddress>();
-            emailAddresses.Add(new EmailAddress() { Value = contactInfo.EmailAddress, DisplayName = "Email" });
-            emailAddresses.Add(new EmailAddress() { Value = contactInfo.AlternateEmailAddress, DisplayName = "Alternate Email" });
-            contactToUpdate.EmailAddresses = emailAddresses;
-
-            List<PhoneNumber> phoneNumbers = new List<PhoneNumber>();
-            phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.WorkPhone, Type = "mobile" });
-            phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.AlternateWorkPhone, Type = "workMobile" });
-            contactToUpdate.PhoneNumbers = phoneNumbers;
-
-            List<Birthday> birthday = new List<Birthday>();
-            birthday.Add(new Birthday() { Text = contactInfo.BirthDate.ToString() });
-            contactToUpdate.Birthdays = birthday;
-
-            List<Organization> organization = new List<Organization>();
-            organization.Add(new Organization()
-            {
-                Name = contactInfo.CompanyName,
-                Department = contactInfo.Department,
-                Title = contactInfo.Title
-            });
-            contactToUpdate.Organizations = organization;
-
-            List<Address> addresses = new List<Address>();
-            addresses.Add(new Address()
-            {
-                StreetAddress = contactInfo.Address1,
-                ExtendedAddress = contactInfo.Address2,
-                City = contactInfo.City,
-                Region = contactInfo.State,
-                Country = contactInfo.Country,
-                PostalCode = contactInfo.Zip,
-                Type = "work"
-            });
-            addresses.Add(new Address()
-            {
-                StreetAddress = contactInfo.OtherAddress1,
-                ExtendedAddress = contactInfo.OtherAddress2,
-                City = contactInfo.OtherCity,
-                Region = contactInfo.OtherState,
-                Country = contactInfo.OtherCountry,
-                PostalCode = contactInfo.OtherZip,
-                Type = "other"
-            });
-            contactToUpdate.Addresses = addresses;
-
-            contactToUpdate.Biographies.Add(new Biography() { Value = contactInfo.Description });
-
-            PeopleResource.UpdateContactRequest updateContactRequest =
-                new PeopleResource.UpdateContactRequest(_service, contactToUpdate, contactToUpdate.ResourceName);
-            updateContactRequest.UpdatePersonFields = "names,emailAddresses,addresses,birthdays,organizations,phoneNumbers,biographies";
-            Person updatedContact = updateContactRequest.Execute();
-            return true;
+            StringBuilder sb = new StringBuilder();
+            var bytes = GetImage(image);
+            sb.Append(Convert.ToBase64String(bytes, 0, bytes.Length));
+            return sb.ToString();
         }
+
+        //private async Task<string> GetImageAsBase64Async(string url) // return Task<string>
+        //{
+        //    using (var client = new HttpClient())
+        //    {
+        //        var bytes = await client.GetByteArrayAsync(url); // there are other methods if you want to get involved with stream processing etc
+        //        var base64String = Convert.ToBase64String(bytes);
+        //        return base64String;
+        //    }
+        //}
+
+        //public bool Insert(string sid)
+        //{
+        //    var contactToCreate = new Person();
+        //    var contactInfo = new ContactInfo()
+        //    {
+        //        FirstName = "Nagesh",
+        //        LastName = "Kulkarni",
+        //        Salutation = "Mr",
+        //        EmailAddress = "nagesh@officeclip.com",
+        //        AlternateEmailAddress = "nageshkulkarni123@gmail.com",
+        //        WorkPhone = "9966321831",
+        //        AlternateWorkPhone = "8125505421",
+        //        BirthDate = DateTime.Parse("1-8-1988"),
+        //        CompanyName = "OfficeClip",
+        //        Department = "Development",
+        //        Title = "Software Engineer",
+        //        Address1 = "H.No: MIG - II - 131",
+        //        Address2 = "Housing Board Colony",
+        //        City = "MahaboobNagar",
+        //        State = "Telangana",
+        //        Country = "India",
+        //        Zip = "509001",
+        //        OtherAddress1 = "H.No 8-10-48",
+        //        OtherAddress2 = "Inside Gadi, Old Tandur",
+        //        OtherCity = "Tandur",
+        //        OtherState = "Telangana",
+        //        OtherCountry = "India",
+        //        OtherZip = "501141",
+        //        Description = "This is to test create contact in Google Contact.",
+        //    };
+
+        //    List<Name> names = new List<Name>();
+        //    names.Add(new Name()
+        //    {
+        //        HonorificPrefix = contactInfo.Salutation,
+        //        GivenName = contactInfo.FirstName,
+        //        FamilyName = contactInfo.LastName
+        //    });
+        //    contactToCreate.Names = names;
+
+        //    List<EmailAddress> emailAddresses = new List<EmailAddress>();
+        //    emailAddresses.Add(new EmailAddress() { Value = contactInfo.EmailAddress, Type = "Email" });
+        //    emailAddresses.Add(new EmailAddress() { Value = contactInfo.AlternateEmailAddress, Type = "Alternate Email" });
+        //    contactToCreate.EmailAddresses = emailAddresses;
+
+        //    List<PhoneNumber> phoneNumbers = new List<PhoneNumber>();
+        //    phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.WorkPhone, Type = "mobile" });
+        //    phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.AlternateWorkPhone, Type = "workMobile" });
+        //    contactToCreate.PhoneNumbers = phoneNumbers;
+
+        //    List<Birthday> birthday = new List<Birthday>();
+        //    birthday.Add(new Birthday() { Text = contactInfo.BirthDate.ToString() });
+        //    contactToCreate.Birthdays = birthday;
+
+        //    List<Organization> organization = new List<Organization>();
+        //    organization.Add(new Organization()
+        //    {
+        //        Name = contactInfo.CompanyName,
+        //        Department = contactInfo.Department,
+        //        Title = contactInfo.Title
+        //    });
+        //    contactToCreate.Organizations = organization;
+
+        //    List<Address> addresses = new List<Address>();
+        //    addresses.Add(new Address()
+        //    {
+        //        StreetAddress = contactInfo.Address1,
+        //        ExtendedAddress = contactInfo.Address2,
+        //        City = contactInfo.City,
+        //        Region = contactInfo.State,
+        //        Country = contactInfo.Country,
+        //        PostalCode = contactInfo.Zip,
+        //        Type = "work"
+        //    });
+        //    addresses.Add(new Address()
+        //    {
+        //        StreetAddress = contactInfo.OtherAddress1,
+        //        ExtendedAddress = contactInfo.OtherAddress2,
+        //        City = contactInfo.OtherCity,
+        //        Region = contactInfo.OtherState,
+        //        Country = contactInfo.OtherCountry,
+        //        PostalCode = contactInfo.OtherZip,
+        //        Type = "other"
+        //    });
+        //    contactToCreate.Addresses = addresses;
+
+        //    List<Biography> biographies = new List<Biography>();
+        //    biographies.Add(new Biography() { Value = contactInfo.Description });
+        //    contactToCreate.Biographies = biographies;
+
+        //    List<Photo> photos = new List<Photo>();
+        //    photos.Add(new Photo() { Url = "C:/Users/Nagesh Kulkarni/Downloads/image10.png" });
+        //    contactToCreate.Photos = photos;
+
+        //    Membership membership = new Membership();
+        //    membership.ContactGroupMembership = new ContactGroupMembership()
+        //    {
+        //        ContactGroupResourceName = sid
+        //    };
+        //    contactToCreate.Memberships = new List<Membership>();
+        //    contactToCreate.Memberships.Add(membership);
+        //    PeopleResource.CreateContactRequest createContactRequest = new PeopleResource.CreateContactRequest(_service, contactToCreate);
+        //    createContactRequest.CreateRequest();
+        //    Person createdContact = createContactRequest.Execute();
+        //    return true;
+        //}
+
+        //public bool Update(ContactInfo contactInfo)
+        //{
+        //    var peopleRequest =
+        //            _service.People.Get(contactInfo.SId);
+        //    peopleRequest.PersonFields = "names,emailAddresses,addresses,birthdays,organizations,phoneNumbers,biographies";
+        //    var contactToUpdate = peopleRequest.Execute();
+
+        //    List<Name> names = new List<Name>();
+        //    names.Add(new Name()
+        //    {
+        //        HonorificPrefix = contactInfo.Salutation,
+        //        GivenName = contactInfo.FirstName,
+        //        FamilyName = contactInfo.LastName
+        //    });
+        //    contactToUpdate.Names = names;
+
+        //    List<EmailAddress> emailAddresses = new List<EmailAddress>();
+        //    emailAddresses.Add(new EmailAddress() { Value = contactInfo.EmailAddress, DisplayName = "Email" });
+        //    emailAddresses.Add(new EmailAddress() { Value = contactInfo.AlternateEmailAddress, DisplayName = "Alternate Email" });
+        //    contactToUpdate.EmailAddresses = emailAddresses;
+
+        //    List<PhoneNumber> phoneNumbers = new List<PhoneNumber>();
+        //    phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.WorkPhone, Type = "mobile" });
+        //    phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.AlternateWorkPhone, Type = "workMobile" });
+        //    contactToUpdate.PhoneNumbers = phoneNumbers;
+
+        //    List<Birthday> birthday = new List<Birthday>();
+        //    birthday.Add(new Birthday() { Text = contactInfo.BirthDate.ToString() });
+        //    contactToUpdate.Birthdays = birthday;
+
+        //    List<Organization> organization = new List<Organization>();
+        //    organization.Add(new Organization()
+        //    {
+        //        Name = contactInfo.CompanyName,
+        //        Department = contactInfo.Department,
+        //        Title = contactInfo.Title
+        //    });
+        //    contactToUpdate.Organizations = organization;
+
+        //    List<Address> addresses = new List<Address>();
+        //    addresses.Add(new Address()
+        //    {
+        //        StreetAddress = contactInfo.Address1,
+        //        ExtendedAddress = contactInfo.Address2,
+        //        City = contactInfo.City,
+        //        Region = contactInfo.State,
+        //        Country = contactInfo.Country,
+        //        PostalCode = contactInfo.Zip,
+        //        Type = "work"
+        //    });
+        //    addresses.Add(new Address()
+        //    {
+        //        StreetAddress = contactInfo.OtherAddress1,
+        //        ExtendedAddress = contactInfo.OtherAddress2,
+        //        City = contactInfo.OtherCity,
+        //        Region = contactInfo.OtherState,
+        //        Country = contactInfo.OtherCountry,
+        //        PostalCode = contactInfo.OtherZip,
+        //        Type = "other"
+        //    });
+        //    contactToUpdate.Addresses = addresses;
+
+        //    contactToUpdate.Biographies.Add(new Biography() { Value = contactInfo.Description });
+
+        //    PeopleResource.UpdateContactRequest updateContactRequest =
+        //        new PeopleResource.UpdateContactRequest(_service, contactToUpdate, contactToUpdate.ResourceName);
+        //    updateContactRequest.UpdatePersonFields = "names,emailAddresses,addresses,birthdays,organizations,phoneNumbers,biographies";
+        //    Person updatedContact = updateContactRequest.Execute();
+        //    return true;
+        //}
 
         public ContactInfo GetContact(string sid)
         {

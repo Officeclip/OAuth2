@@ -11,6 +11,7 @@ using OfficeClip.OpenSource.OAuth2.CSharp.Google.People;
 using System.Configuration;
 using devmon_library;
 using System.Collections.Generic;
+using OfficeClipGoogle = OfficeClip.OpenSource.OAuth2.Lib.Provider.Google;
 //using OpenNetTools.OAuth2.Services.Google.Contacts;
 
 namespace OfficeClip.OpenSource.OAuth2.Example
@@ -22,7 +23,7 @@ namespace OfficeClip.OpenSource.OAuth2.Example
         protected void Page_Load(object sender, EventArgs e)
         {
             var element = Utils.LoadConfigurationFromWebConfig("Google");
-            var client = new Google(
+            var client = new OfficeClipGoogle(
                                 element.ClientId, 
                                 element.ClientSecret, 
                                 element.Scope, 
@@ -87,11 +88,13 @@ namespace OfficeClip.OpenSource.OAuth2.Example
 
                 //var isCreateContact = peopleContact.Delete(contactInfoList);
 
-                var isCreateContact = peopleContact.Insert(ConfigurationManager.AppSettings["ContactGroup"]);
-                if (isCreateContact == true)
-                {
-                    litFullName.Text = ObjectDumper.Dump(isCreateContact);
-                }
+                //var isCreateContact = peopleContact.Insert(ConfigurationManager.AppSettings["ContactGroup"]);
+                //if (isCreateContact == true)
+                //{
+                //    litFullName.Text = ObjectDumper.Dump(isCreateContact);
+                //}
+
+                var createContact = peopleContact.ContactsBatchHardCoded();
 
                 //bool isUpdateContact = peopleContact.Update(contact);
                 //if (isUpdateContact == true)

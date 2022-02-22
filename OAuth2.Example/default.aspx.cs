@@ -1,6 +1,7 @@
 ﻿using System;
 using OfficeClip.OpenSource.OAuth2.Lib;
 using OfficeClip.OpenSource.OAuth2.Lib.Provider;
+using OfficeClipGoogle = OfficeClip.OpenSource.OAuth2.Lib.Provider.Google;
 
 namespace OfficeClip.OpenSource.OAuth2.Example
 {
@@ -10,7 +11,7 @@ namespace OfficeClip.OpenSource.OAuth2.Example
         protected void Page_Load(object sender, EventArgs e)
         {
             var element = Utils.LoadConfigurationFromWebConfig("Google"); //Test Google
-            var client = new Google(
+            var client = new OfficeClipGoogle(
                                 element.ClientId, 
                                 element.ClientSecret, 
                                 element.Scope, 
