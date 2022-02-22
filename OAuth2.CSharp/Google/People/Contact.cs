@@ -261,6 +261,19 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
             return contactInfos;
         }
 
+        public List<SignatureInfo> Update(List<ContactInfo> contactInfos)
+        {
+            return null;
+        }
+
+        public SignatureInfo Update(ContactInfo contactInfo)
+        {
+            // get the existing contact, write over it with contactInfo,
+            // update the contact and send using the same etag
+            return null;
+        }
+
+
         public SignatureInfo Insert(string groupSid, ContactInfo contact)
         {
             var contactToCreate = new Person();
