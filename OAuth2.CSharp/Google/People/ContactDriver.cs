@@ -22,7 +22,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
     /// Test class with people api
     /// </summary>
     /// <see cref="https://stackoverflow.com/questions/54830076/google-people-api-c-sharp-code-to-get-list-of-contact-groups"/>
-    public class Contact
+    public class ContactDriver
     {
         private PeopleServiceService _service;
         private UpdateContactPhotoRequest photoBody;
@@ -30,7 +30,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
         private static Logger logger =
                                     LogManager.GetCurrentClassLogger();
 
-        public Contact(
+        public ContactDriver(
             string clientId,
             string clientSecret,
             IEnumerable<string> scopes,
@@ -133,13 +133,16 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
             peopleRequest.PersonFields = "clientData";
             var peoplesInfo = peopleRequest.Execute();
 
-            List<SignatureInfo> signatureInfoList = new List<SignatureInfo>();
+            var signatureInfoList = new List<SignatureInfo>();
             foreach (var peopleResponse in peoplesInfo.Responses)
             {
+                // CR:2022-02-23 Please check for error and if there is an error, populate the error number and error description
                 signatureInfoList.Add(new SignatureInfo()
                 {
                     SId = peopleResponse.Person.ResourceName,
-                    ETag = peopleResponse.Person.ETag
+                    ETag = peopleResponse.Person.ETag,
+                    ErrorNumber = 0,
+                    ErrorMessage = ""
                 });
             }
             return signatureInfoList;
@@ -169,7 +172,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
             peopleRequest.PersonFields = "names,emailAddresses,addresses,birthdays,organizations,phoneNumbers,biographies";
             var peoplesInfo = peopleRequest.Execute();
 
-            List<ContactInfo> contactInfoList = new List<ContactInfo>();
+            var contactInfoList = new List<ContactInfo>();
             foreach (var peopleResponse in peoplesInfo.Responses)
             {
                 contactInfoList.AddRange(new List<ContactInfo>()
@@ -289,6 +292,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
                                   $"Could not Add Photo: {ex.Message}");
                 }
             }
+            // CR:2022-02-23 Please check for error and if there is an error, populate the error number and error description
 
             var signatureInfo = new SignatureInfo()
             {
@@ -396,7 +400,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
                                   $"Could not Add Photo: {ex.Message}");
                 }
             }
-
+            // CR:2022-02-23 Please check for error and if there is an error, populate the error number and error description
             var signatureInfo = new SignatureInfo()
             {
                 SId = updateContactPhotoRequest.ResourceName,

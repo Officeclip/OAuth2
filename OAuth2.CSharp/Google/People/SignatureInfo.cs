@@ -16,5 +16,17 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
         {
             get; set;
         }
+        public int ErrorNumber
+        {
+            get; set;
+        } = 0;
+        public string ErrorMessage
+        {
+            get; set;
+        }
+        public string UpdateTime
+        {
+            get; set;
+        }
     }
 }

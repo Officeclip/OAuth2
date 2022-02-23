@@ -72,7 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Google\People\Contact.cs" />
+    <Compile Include="Google\People\ContactDriver.cs" />
     <Compile Include="Google\People\ContactGroupInfo.cs" />
     <Compile Include="Google\People\ContactInfo.cs" />
     <Compile Include="Google\People\SignatureInfo.cs" />
