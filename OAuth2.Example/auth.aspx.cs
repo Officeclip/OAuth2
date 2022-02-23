@@ -94,7 +94,7 @@ namespace OfficeClip.OpenSource.OAuth2.Example
                 //    litFullName.Text = ObjectDumper.Dump(isCreateContact);
                 //}
 
-                var createContact = peopleContact.ContactsBatchHardCoded();
+                //var createContact = peopleContact.ContactsBatchHardCoded();
 
                 //bool isUpdateContact = peopleContact.Update(contact);
                 //if (isUpdateContact == true)

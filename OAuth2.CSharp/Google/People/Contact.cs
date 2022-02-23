@@ -26,9 +26,9 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
     {
         private PeopleServiceService _service;
         private UpdateContactPhotoRequest photoBody;
+        private PeopleResource.UpdateContactPhotoRequest updateContactPhotoRequest;
         private static Logger logger =
                                     LogManager.GetCurrentClassLogger();
-        private WebClient webClient;
 
         public Contact(
             string clientId,
@@ -153,7 +153,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
         public List<ContactInfo> GetDataByKey(List<string> sids)
         {
             var allContactInfo = new List<ContactInfo>();
-            for (int i=0; i<sids.Count; i=i+200)
+            for (int i = 0; i<sids.Count; i=i+200)
             {
                 var workList = sids.Skip(i).Take(200).ToList();
                 var batchList = GetDataByKeyBatch(workList);
@@ -175,7 +175,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
                 contactInfoList.AddRange(new List<ContactInfo>()
                 {
                     GetContactInfo(peopleResponse.Person)
-                }); 
+                });
             }
             return contactInfoList;
         }
@@ -194,8 +194,9 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
             foreach (var contactInfo in contactInfos)
             {
                 var contactInfoValue = Update(contactInfo);
-                signatureInfoList.Add(new SignatureInfo() { 
-                     ETag = contactInfoValue.ETag
+                signatureInfoList.Add(new SignatureInfo()
+                {
+                    ETag = contactInfoValue.ETag
                 });
             }
             return signatureInfoList;
@@ -270,34 +271,24 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
             biographies.Add(new Biography() { Value = contactInfo.Description });
             contactToUpdate.Biographies = biographies;
 
-            //Membership membership = new Membership();
-            //membership.ContactGroupMembership = new ContactGroupMembership()
-            //{
-            //    ContactGroupResourceName = groupSid
-            //};
-            //contactToUpdate.Memberships = new List<Membership>();
-            //contactToUpdate.Memberships.Add(membership);
-
             PeopleResource.UpdateContactRequest updateContactRequest = new PeopleResource.UpdateContactRequest(_service, contactToUpdate, contactToUpdate.ResourceName);
             updateContactRequest.UpdatePersonFields = "names,emailAddresses,addresses,birthdays,organizations,phoneNumbers,biographies";
             updateContactRequest.CreateRequest();
             Person updatedContact = updateContactRequest.Execute();
 
-            string url = "https://picsum.photos/id/237/200/300";
-            var base64Url = GetBase64Image(url);
-
-            List<Photo> photos = new List<Photo>();
-            photos.Add(new Photo() { Url = base64Url });
-            contactToUpdate.Photos = photos;
-
-            photoBody = new UpdateContactPhotoRequest
+            if (contactInfo.Base64PhotoBytes != null)
             {
-                PhotoBytes = base64Url
-            };
-
-            PeopleResource.UpdateContactPhotoRequest updateContactPhotoRequest = new PeopleResource.UpdateContactPhotoRequest(_service, photoBody, updatedContact.ResourceName);
-            updateContactPhotoRequest.CreateRequest();
-            var updatedContactInfo = updateContactPhotoRequest.Execute();
+                try
+                {
+                    updateContactPhotoRequest = UpdateImage(updatedContact.ResourceName, contactInfo.Base64PhotoBytes);
+                }
+                catch (Exception ex)
+                {
+                    logger?.Error(
+                                  "OAuth2.CSharp.Google.People.Contact.Insert",
+                                  $"Could not Add Photo: {ex.Message}");
+                }
+            }
 
             var signatureInfo = new SignatureInfo()
             {
@@ -319,131 +310,66 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
             return signatureInfoList;
         }
 
-        public List<ContactInfo> ContactsBatchHardCoded()
-        {
-            List<ContactInfo> contactInfos = new List<ContactInfo>();
-            contactInfos.Add(new ContactInfo()
-            {
-                FirstName = "S.K",
-                LastName = "Dutta",
-                Salutation = "Mr",
-                EmailAddress = "skd@officeclip.com",
-                AlternateEmailAddress = "skdutta@gmail.com",
-                WorkPhone = "9966321831",
-                AlternateWorkPhone = "8125505421",
-                BirthDate = DateTime.Parse("1-8-1988"),
-                CompanyName = "OfficeClip",
-                Department = "Development",
-                Title = "Software Engineer",
-                Address1 = "H.No: MIG - II - 131",
-                Address2 = "Housing Board Colony",
-                City = "MahaboobNagar",
-                State = "Telangana",
-                Country = "India",
-                Zip = "509001",
-                OtherAddress1 = "H.No 8-10-48",
-                OtherAddress2 = "Inside Gadi, Old Tandur",
-                OtherCity = "Tandur",
-                OtherState = "Telangana",
-                OtherCountry = "India",
-                OtherZip = "501141",
-                Description = "This is to test create contact in Google Contact.",
-                ContactSource = "people/c2655525945195541981"
-            });
-            contactInfos.Add(new ContactInfo()
-            {
-                FirstName = "Narsimha",
-                LastName = "Rao",
-                Salutation = "Mr",
-                EmailAddress = "narsimha@officeclip.com",
-                AlternateEmailAddress = "narsimha@gmail.com",
-                WorkPhone = "1234567890",
-                AlternateWorkPhone = "0987654321",
-                BirthDate = DateTime.Parse("1-8-1988"),
-                CompanyName = "OfficeClip",
-                Department = "Development",
-                Title = "Software Engineer",
-                Address1 = "H.No: MIG - II - 131",
-                Address2 = "Housing Board Colony",
-                City = "MahaboobNagar",
-                State = "Telangana",
-                Country = "India",
-                Zip = "509001",
-                OtherAddress1 = "H.No 8-10-48",
-                OtherAddress2 = "Inside Gadi, Old Tandur",
-                OtherCity = "Tandur",
-                OtherState = "Telangana",
-                OtherCountry = "India",
-                OtherZip = "501141",
-                Description = "This is to test create contact in Google Contact.",
-                ContactSource = "people/c9202708945039554846"
-            });
-            //Insert("contactGroups/7ca636f18d719084", contactInfos);
-            Update(contactInfos);
-            return contactInfos;
-        }
-
-
-        public SignatureInfo Insert(string groupSid, ContactInfo contact)
+        public SignatureInfo Insert(string groupSid, ContactInfo contactInfo)
         {
             var contactToCreate = new Person();
             List<Name> names = new List<Name>();
             names.Add(new Name()
             {
-                HonorificPrefix = contact.Salutation,
-                GivenName = contact.FirstName,
-                FamilyName = contact.LastName
+                HonorificPrefix = contactInfo.Salutation,
+                GivenName = contactInfo.FirstName,
+                FamilyName = contactInfo.LastName
             });
             contactToCreate.Names = names;
 
             List<EmailAddress> emailAddresses = new List<EmailAddress>();
-            emailAddresses.Add(new EmailAddress() { Value = contact.EmailAddress, Type = "Email" });
-            emailAddresses.Add(new EmailAddress() { Value = contact.AlternateEmailAddress, Type = "Alternate Email" });
+            emailAddresses.Add(new EmailAddress() { Value = contactInfo.EmailAddress, Type = "Email" });
+            emailAddresses.Add(new EmailAddress() { Value = contactInfo.AlternateEmailAddress, Type = "Alternate Email" });
             contactToCreate.EmailAddresses = emailAddresses;
 
             List<PhoneNumber> phoneNumbers = new List<PhoneNumber>();
-            phoneNumbers.Add(new PhoneNumber() { Value = contact.WorkPhone, Type = "mobile" });
-            phoneNumbers.Add(new PhoneNumber() { Value = contact.AlternateWorkPhone, Type = "workMobile" });
+            phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.WorkPhone, Type = "mobile" });
+            phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.AlternateWorkPhone, Type = "workMobile" });
             contactToCreate.PhoneNumbers = phoneNumbers;
 
             List<Birthday> birthday = new List<Birthday>();
-            birthday.Add(new Birthday() { Text = contact.BirthDate.ToString() });
+            birthday.Add(new Birthday() { Text = contactInfo.BirthDate.ToString() });
             contactToCreate.Birthdays = birthday;
 
             List<Organization> organization = new List<Organization>();
             organization.Add(new Organization()
             {
-                Name = contact.CompanyName,
-                Department = contact.Department,
-                Title = contact.Title
+                Name = contactInfo.CompanyName,
+                Department = contactInfo.Department,
+                Title = contactInfo.Title
             });
             contactToCreate.Organizations = organization;
 
             List<Address> addresses = new List<Address>();
             addresses.Add(new Address()
             {
-                StreetAddress = contact.Address1,
-                ExtendedAddress = contact.Address2,
-                City = contact.City,
-                Region = contact.State,
-                Country = contact.Country,
-                PostalCode = contact.Zip,
+                StreetAddress = contactInfo.Address1,
+                ExtendedAddress = contactInfo.Address2,
+                City = contactInfo.City,
+                Region = contactInfo.State,
+                Country = contactInfo.Country,
+                PostalCode = contactInfo.Zip,
                 Type = "work"
             });
             addresses.Add(new Address()
             {
-                StreetAddress = contact.OtherAddress1,
-                ExtendedAddress = contact.OtherAddress2,
-                City = contact.OtherCity,
-                Region = contact.OtherState,
-                Country = contact.OtherCountry,
-                PostalCode = contact.OtherZip,
+                StreetAddress = contactInfo.OtherAddress1,
+                ExtendedAddress = contactInfo.OtherAddress2,
+                City = contactInfo.OtherCity,
+                Region = contactInfo.OtherState,
+                Country = contactInfo.OtherCountry,
+                PostalCode = contactInfo.OtherZip,
                 Type = "other"
             });
             contactToCreate.Addresses = addresses;
 
             List<Biography> biographies = new List<Biography>();
-            biographies.Add(new Biography() { Value = contact.Description });
+            biographies.Add(new Biography() { Value = contactInfo.Description });
             contactToCreate.Biographies = biographies;
 
             Membership membership = new Membership();
@@ -457,51 +383,48 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
             createContactRequest.CreateRequest();
             Person createdContact = createContactRequest.Execute();
 
-            //string url = "https://www.google.com/images/logos/ps_logo2.png";
-            //var base64Url = GetBase64Image(url);
-
-            //List<Photo> photos = new List<Photo>();
-            //photos.Add(new Photo() { Url = base64Url });
-            //contactToCreate.Photos = photos;
-
-            //photoBody = new UpdateContactPhotoRequest
-            //{
-            //    PhotoBytes = base64Url
-            //};
-
-            PeopleResource.UpdateContactPhotoRequest updateContactPhotoRequest = new PeopleResource.UpdateContactPhotoRequest(_service, photoBody, createdContact.ResourceName);
-            updateContactPhotoRequest.CreateRequest();
-            var updatedContact = updateContactPhotoRequest.Execute();
+            if (contactInfo.Base64PhotoBytes != null)
+            {
+                try
+                {
+                    updateContactPhotoRequest = UpdateImage(createdContact.ResourceName, contactInfo.Base64PhotoBytes);
+                }
+                catch (Exception ex)
+                {
+                    logger?.Error(
+                                  "OAuth2.CSharp.Google.People.Contact.Insert",
+                                  $"Could not Add Photo: {ex.Message}");
+                }
+            }
 
             var signatureInfo = new SignatureInfo()
             {
                 SId = updateContactPhotoRequest.ResourceName,
-                ETag = createdContact.ETag  
+                ETag = createdContact.ETag
             };
-            return signatureInfo;       
+            return signatureInfo;
         }
 
-        public UpdateContactPhotoResponse UpdateImage(string resourceName)
+        public PeopleResource.UpdateContactPhotoRequest UpdateImage(string resourceName, string base64ImageBytes)
         {
             var contactToCreate = new Person();
 
-            string url = "https://www.google.com/images/logos/ps_logo2.png";
-            var base64Url = GetBase64Image(url);
+            //var base64Url = GetBase64Image(url);
 
             List<Photo> photos = new List<Photo>();
-            photos.Add(new Photo() { Url = base64Url });
+            photos.Add(new Photo() { Url = base64ImageBytes });
             contactToCreate.Photos = photos;
 
             photoBody = new UpdateContactPhotoRequest
             {
-                PhotoBytes = base64Url
+                PhotoBytes = base64ImageBytes
             };
 
-            PeopleResource.UpdateContactPhotoRequest updateContactPhotoRequest = new PeopleResource.UpdateContactPhotoRequest(_service, photoBody, resourceName);
+            updateContactPhotoRequest = new PeopleResource.UpdateContactPhotoRequest(_service, photoBody, resourceName);
             updateContactPhotoRequest.CreateRequest();
             var updatedContact = updateContactPhotoRequest.Execute();
 
-            return updatedContact;
+            return updateContactPhotoRequest;
         }
 
         byte[] GetImage(string url)
@@ -534,14 +457,14 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
             return (buf);
         }
 
-        string GetBase64Image(string image)
+        public string GetBase64Image(string imageUrl)
         {
             StringBuilder sb = new StringBuilder();
-            var bytes = GetImage(image);
+            var bytes = GetImage(imageUrl);
             sb.Append(Convert.ToBase64String(bytes, 0, bytes.Length));
             return sb.ToString();
         }
-        
+
 
         public ContactInfo GetContact(string sid)
         {
@@ -639,101 +562,5 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
 
             return contactInfo;
         }
-
-        public List<string> ContactList
-        {
-            get
-            {
-                //    var peopleRequest =
-                //        _service.People.Connections.List("people/me");
-                //    peopleRequest.PersonFields = "names,emailAddresses";
-                //    peopleRequest.SortOrder = (PeopleResource.ConnectionsResource.ListRequest.SortOrderEnum)1;
-                //    var people = peopleRequest.Execute();
-
-                //    // eg to show display name of each contact
-                //    var contacts = new List<string>();
-                //    foreach (var person in people.Connections)
-                //    {
-                //        contacts.Add(person.Names[0].DisplayName);
-                //    }
-                //    return contacts;
-                return null;
-            }
-        }
-
-        //public void CreateContact(string contactGroupResource)
-        //{
-        //    Person contactToCreate = new Person();
-
-        //    List<Name> names = new List<Name>();
-        //    names.Add(new Name() { HonorificPrefix = "Mr.",  GivenName = "Nagesh", FamilyName = "Kulkarni" });
-        //    contactToCreate.Names = names;
-
-        //    List<EmailAddress> emailAddresses = new List<EmailAddress>();
-        //    emailAddresses.Add(new EmailAddress() { Value = "john@officeclip.com" });
-        //    contactToCreate.EmailAddresses = emailAddresses;
-
-        //    List<PhoneNumber> phoneNumbers = new List<PhoneNumber>();
-        //    phoneNumbers.Add(new PhoneNumber() { Value = "1234567890" });
-        //    contactToCreate.PhoneNumbers = phoneNumbers;
-
-        //    List<Birthday> birthday = new List<Birthday>();
-        //    birthday.Add(new Birthday() { Text = "1/8/1988" });
-        //    contactToCreate.Birthdays = birthday;
-
-        //    List<Organization> organization = new List<Organization>();
-        //    organization.Add(new Organization() { Name = "OfficeClip", Department = "Development", Title = "Software Engineer"});
-        //    contactToCreate.Organizations = organization;
-
-        //    List<Address> addresses = new List<Address>();
-        //    addresses.Add(new Address() { StreetAddress="MIG-II-131", ExtendedAddress="Housing Board Colony", City="", Region="", Country="", PostalCode="" });
-        //    contactToCreate.Addresses = addresses;
-
-        //    var contactGroupMembership = new ContactGroupMembership()
-        //    {
-        //        ContactGroupResourceName = contactGroupResource
-        //    };
-
-        //    contactToCreate.Memberships = new List<Membership>();
-        //    var memberShip = new Membership()
-        //    {
-        //        ContactGroupMembership = contactGroupMembership,
-
-        //    };
-        //    contactToCreate.Memberships.Add(memberShip);
-
-        //    PeopleResource.CreateContactRequest request = 
-        //        new PeopleResource.CreateContactRequest(_service, contactToCreate);
-
-        //    Person createdContact = request.Execute();
-        //}
-
-        //public void UpdateContact(string resource)
-        //{
-        //    var contactService = _service
-        //                                .People
-        //                                .Get(resource);
-        //    contactService.PersonFields = "names";
-        //    var contactToUpdate = contactService.Execute();
-
-        //    List<Name> names = new List<Name>();
-        //    names.Add(new Name() { HonorificPrefix = "Mr.", GivenName = "Martin", FamilyName = "ABCD" });
-        //    contactToUpdate.Names = names;
-
-        //    //List<EmailAddress> emailAddresses = new List<EmailAddress>();
-        //    //emailAddresses.Add(new EmailAddress() { Value = "nagesh@officeclip.com" });
-        //    //contactToUpdate.EmailAddresses = emailAddresses;
-
-        //    //List<PhoneNumber> phoneNumbers = new List<PhoneNumber>();
-        //    //phoneNumbers.Add(new PhoneNumber() { Value = "9876543210" });
-        //    //contactToUpdate.PhoneNumbers = phoneNumbers;
-
-        //    PeopleResource.UpdateContactRequest updateContactRequest =
-        //        new PeopleResource.UpdateContactRequest(_service, contactToUpdate, contactToUpdate.ResourceName);
-        //    updateContactRequest.UpdatePersonFields = "names";
-        //    //updateContactRequest.PersonFields = "emailAddresses";
-        //    //updateContactRequest.Fields = "emailAddresses";
-        //    Person updatedContact = updateContactRequest.Execute();
-        //}
     }
 }

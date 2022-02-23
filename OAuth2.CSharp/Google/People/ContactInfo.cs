@@ -24,7 +24,11 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
         {
             get; set;
         }
-        public byte[] PhotoBytes
+
+        /// <summary>
+        /// if Base64PhotoBytes is null then there is no Image.
+        /// </summary>
+        public string Base64PhotoBytes
         {
             get; set;
         }

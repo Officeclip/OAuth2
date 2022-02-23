@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth2.Services", "OAuth2.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth2.CSharp", "OAuth2.CSharp\OAuth2.CSharp.csproj", "{4D24EDCB-530B-4AD0-9511-BC233E891EF6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth2DriverTest", "OAuth2DriverTest\OAuth2DriverTest.csproj", "{D7B79030-AF1E-4392-8BCB-422AB74B9C3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{4D24EDCB-530B-4AD0-9511-BC233E891EF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D24EDCB-530B-4AD0-9511-BC233E891EF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D24EDCB-530B-4AD0-9511-BC233E891EF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7B79030-AF1E-4392-8BCB-422AB74B9C3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7B79030-AF1E-4392-8BCB-422AB74B9C3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7B79030-AF1E-4392-8BCB-422AB74B9C3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7B79030-AF1E-4392-8BCB-422AB74B9C3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
