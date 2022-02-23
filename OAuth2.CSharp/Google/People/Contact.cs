@@ -22,7 +22,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
     /// Test class with people api
     /// </summary>
     /// <see cref="https://stackoverflow.com/questions/54830076/google-people-api-c-sharp-code-to-get-list-of-contact-groups"/>
-    public class ContactDriver
+    public class Contact
     {
         private PeopleServiceService _service;
         private UpdateContactPhotoRequest photoBody;
@@ -30,7 +30,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
         private static Logger logger =
                                     LogManager.GetCurrentClassLogger();
 
-        public ContactDriver(
+        public Contact(
             string clientId,
             string clientSecret,
             IEnumerable<string> scopes,
