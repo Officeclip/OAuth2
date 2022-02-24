@@ -296,7 +296,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
 
             var signatureInfo = new SignatureInfo()
             {
-                SId = updateContactPhotoRequest.ResourceName,
+                SId = updatedContact.ResourceName,
                 ETag = updatedContact.ETag
             };
             return signatureInfo;
@@ -403,7 +403,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
             // CR:2022-02-23 Please check for error and if there is an error, populate the error number and error description
             var signatureInfo = new SignatureInfo()
             {
-                SId = updateContactPhotoRequest.ResourceName,
+                SId = createdContact.ResourceName,
                 ETag = createdContact.ETag
             };
             return signatureInfo;
@@ -413,15 +413,15 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
         {
             var contactToCreate = new Person();
 
-            //var base64Url = GetBase64Image(url);
+            var base64Url = GetBase64Image(base64ImageBytes);
 
             List<Photo> photos = new List<Photo>();
-            photos.Add(new Photo() { Url = base64ImageBytes });
+            photos.Add(new Photo() { Url = base64Url });
             contactToCreate.Photos = photos;
 
             photoBody = new UpdateContactPhotoRequest
             {
-                PhotoBytes = base64ImageBytes
+                PhotoBytes = base64Url
             };
 
             updateContactPhotoRequest = new PeopleResource.UpdateContactPhotoRequest(_service, photoBody, resourceName);
