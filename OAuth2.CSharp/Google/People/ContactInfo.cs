@@ -188,6 +188,10 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
         {
             get; set;
         }
+        public string Website
+        {
+            get; set;
+        }
         public string ParentAccount
         {
             get; set;
