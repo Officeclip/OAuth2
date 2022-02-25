@@ -209,7 +209,9 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
         {
             // get the existing contact, write over it with contactInfo,
             // update the contact and send using the same etag
-            Person updatedContact = new Person();
+
+            SignatureInfo signatureInfo;
+
             try
             {
                 var peopleRequest =
@@ -227,8 +229,8 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
                 contactToUpdate.Names = names;
 
                 List<EmailAddress> emailAddresses = new List<EmailAddress>();
-                emailAddresses.Add(new EmailAddress() { Value = contactInfo.EmailAddress, Type = "Email" });
-                emailAddresses.Add(new EmailAddress() { Value = contactInfo.AlternateEmailAddress, Type = "Alternate Email" });
+                emailAddresses.Add(new EmailAddress() { Value = contactInfo.EmailAddress, Type = "work" });
+                emailAddresses.Add(new EmailAddress() { Value = contactInfo.AlternateEmailAddress, Type = "other" });
                 contactToUpdate.EmailAddresses = emailAddresses;
 
                 List<PhoneNumber> phoneNumbers = new List<PhoneNumber>();
@@ -253,7 +255,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
                 contactToUpdate.Organizations = organization;
 
                 List<Url> websites = new List<Url>();
-                websites.Add(new Url() { Value = contactInfo.Website, Type = "Website" });
+                websites.Add(new Url() { Value = contactInfo.Website, Type = "homePage" });
                 contactToUpdate.Urls = websites;
 
                 List<Address> addresses = new List<Address>();
@@ -299,7 +301,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
                 PeopleResource.UpdateContactRequest updateContactRequest = new PeopleResource.UpdateContactRequest(_service, contactToUpdate, contactToUpdate.ResourceName);
                 updateContactRequest.UpdatePersonFields = "names,emailAddresses,addresses,birthdays,organizations,phoneNumbers,biographies,urls,userDefined";
                 updateContactRequest.CreateRequest();
-                updatedContact = updateContactRequest.Execute();
+                var updatedContact = updateContactRequest.Execute();
 
                 if (contactInfo.Base64PhotoBytes != null)
                 {
@@ -314,6 +316,12 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
                                       $"Could not Add Photo: {ex.Message}");
                     }
                 }
+                signatureInfo = new SignatureInfo()
+                {
+                    SId = updatedContact.ResourceName,
+                    ETag = updatedContact.ETag
+                };
+
                 // CR:2022-02-23 Please check for error and if there is an error, populate the error number and error description
             }
             catch (Exception ex)
@@ -321,16 +329,16 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
                 logger?.Error(
                               "OAuth2.CSharp.Google.People.Contact.Update",
                               $"Could not update contact: {ex.Message}");
+                signatureInfo = new SignatureInfo()
+                {
+                    SId = contactInfo.SId,
+                    ETag = contactInfo.ETag,
+                    ErrorNumber = -1,
+                    ErrorMessage = ex.Message
+
+                };
 
             }
-
-            var signatureInfo = new SignatureInfo()
-            {
-                SId = updatedContact.ResourceName,
-                ETag = updatedContact.ETag
-                
-            };
-
             return signatureInfo;
         }
 
@@ -348,116 +356,136 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
 
         public SignatureInfo Insert(string groupSid, ContactInfo contactInfo)
         {
-            var contactToCreate = new Person();
-            List<Name> names = new List<Name>();
-            names.Add(new Name()
+            SignatureInfo signatureInfo;
+
+            try
             {
-                HonorificPrefix = contactInfo.Salutation,
-                GivenName = contactInfo.FirstName,
-                FamilyName = contactInfo.LastName
-            });
-            contactToCreate.Names = names;
+                var contactToCreate = new Person();
 
-            List<EmailAddress> emailAddresses = new List<EmailAddress>();
-            emailAddresses.Add(new EmailAddress() { Value = contactInfo.EmailAddress, Type = "Email" });
-            emailAddresses.Add(new EmailAddress() { Value = contactInfo.AlternateEmailAddress, Type = "Alternate Email" });
-            contactToCreate.EmailAddresses = emailAddresses;
-
-            List<PhoneNumber> phoneNumbers = new List<PhoneNumber>();
-            phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.WorkPhone, Type = "work" });
-            phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.AlternateWorkPhone, Type = "other" });
-            phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.HomePhone, Type = "home" });
-            phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.MobilePhone, Type = "mobile" });
-            phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.Fax, Type = "workFax" });
-            contactToCreate.PhoneNumbers = phoneNumbers;
-
-            List<Birthday> birthday = new List<Birthday>();
-            birthday.Add(new Birthday() { Text = contactInfo.BirthDate.ToString() });
-            contactToCreate.Birthdays = birthday;
-
-            List<Organization> organization = new List<Organization>();
-            organization.Add(new Organization()
-            {
-                Name = contactInfo.CompanyName,
-                Department = contactInfo.Department,
-                Title = contactInfo.Title
-            });
-            contactToCreate.Organizations = organization;
-
-            List<Url> websites = new List<Url>();
-            websites.Add(new Url() { Value = contactInfo.Website, Type = "Website" });
-            contactToCreate.Urls = websites;
-
-            List<Address> addresses = new List<Address>();
-            addresses.Add(new Address()
-            {
-                StreetAddress = contactInfo.Address1,
-                ExtendedAddress = contactInfo.Address2,
-                City = contactInfo.City,
-                Region = contactInfo.State,
-                Country = contactInfo.Country,
-                PostalCode = contactInfo.Zip,
-                Type = "work"
-            });
-            addresses.Add(new Address()
-            {
-                StreetAddress = contactInfo.OtherAddress1,
-                ExtendedAddress = contactInfo.OtherAddress2,
-                City = contactInfo.OtherCity,
-                Region = contactInfo.OtherState,
-                Country = contactInfo.OtherCountry,
-                PostalCode = contactInfo.OtherZip,
-                Type = "home"
-            });
-            contactToCreate.Addresses = addresses;
-
-            List<Biography> biographies = new List<Biography>();
-            biographies.Add(new Biography() { Value = contactInfo.Description });
-            contactToCreate.Biographies = biographies;
-
-            List<UserDefined> userDefineds = new List<UserDefined>();
-            userDefineds.Add(new UserDefined() { Value = contactInfo.Udf1, Key = "Udf1" });
-            userDefineds.Add(new UserDefined() { Value = contactInfo.Udf2, Key = "Udf2" });
-            userDefineds.Add(new UserDefined() { Value = contactInfo.Udf3, Key = "Udf3" });
-            userDefineds.Add(new UserDefined() { Value = contactInfo.Udf4, Key = "Udf4" });
-            userDefineds.Add(new UserDefined() { Value = contactInfo.Udf5, Key = "Udf5" });
-            userDefineds.Add(new UserDefined() { Value = contactInfo.Udf6, Key = "Udf6" });
-            userDefineds.Add(new UserDefined() { Value = contactInfo.Udf7, Key = "Udf7" });
-            userDefineds.Add(new UserDefined() { Value = contactInfo.Udf8, Key = "Udf8" });
-            userDefineds.Add(new UserDefined() { Value = contactInfo.Udf9, Key = "Udf9" });
-            userDefineds.Add(new UserDefined() { Value = contactInfo.Udf10, Key = "Udf10" });
-            contactToCreate.UserDefined = userDefineds;
-
-            Membership membership = new Membership();
-            membership.ContactGroupMembership = new ContactGroupMembership()
-            {
-                ContactGroupResourceName = groupSid
-            };
-            contactToCreate.Memberships = new List<Membership>();
-            contactToCreate.Memberships.Add(membership);
-            PeopleResource.CreateContactRequest createContactRequest = new PeopleResource.CreateContactRequest(_service, contactToCreate);
-            createContactRequest.CreateRequest();
-            var createdContact = createContactRequest.Execute();
-
-            if (contactInfo.Base64PhotoBytes != null)
-            {
-                try
+                List<Name> names = new List<Name>();
+                names.Add(new Name()
                 {
-                    updateContactPhotoRequest = UpdateImage(createdContact.ResourceName, contactInfo.Base64PhotoBytes);
-                }
-                catch (Exception ex)
+                    HonorificPrefix = contactInfo.Salutation,
+                    GivenName = contactInfo.FirstName,
+                    FamilyName = contactInfo.LastName
+                });
+                contactToCreate.Names = names;
+
+                List<EmailAddress> emailAddresses = new List<EmailAddress>();
+                emailAddresses.Add(new EmailAddress() { Value = contactInfo.EmailAddress, Type = "Email" });
+                emailAddresses.Add(new EmailAddress() { Value = contactInfo.AlternateEmailAddress, Type = "Alternate Email" });
+                contactToCreate.EmailAddresses = emailAddresses;
+
+                List<PhoneNumber> phoneNumbers = new List<PhoneNumber>();
+                phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.WorkPhone, Type = "work" });
+                phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.AlternateWorkPhone, Type = "other" });
+                phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.HomePhone, Type = "home" });
+                phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.MobilePhone, Type = "mobile" });
+                phoneNumbers.Add(new PhoneNumber() { Value = contactInfo.Fax, Type = "workFax" });
+                contactToCreate.PhoneNumbers = phoneNumbers;
+
+                List<Birthday> birthday = new List<Birthday>();
+                birthday.Add(new Birthday() { Text = contactInfo.BirthDate.ToString() });
+                contactToCreate.Birthdays = birthday;
+
+                List<Organization> organization = new List<Organization>();
+                organization.Add(new Organization()
                 {
-                    logger?.Error(
-                                  "OAuth2.CSharp.Google.People.Contact.Insert",
-                                  $"Could not Add Photo: {ex.Message}");
+                    Name = contactInfo.CompanyName,
+                    Department = contactInfo.Department,
+                    Title = contactInfo.Title
+                });
+                contactToCreate.Organizations = organization;
+
+                List<Url> websites = new List<Url>();
+                websites.Add(new Url() { Value = contactInfo.Website, Type = "Website" });
+                contactToCreate.Urls = websites;
+
+                List<Address> addresses = new List<Address>();
+                addresses.Add(new Address()
+                {
+                    StreetAddress = contactInfo.Address1,
+                    ExtendedAddress = contactInfo.Address2,
+                    City = contactInfo.City,
+                    Region = contactInfo.State,
+                    Country = contactInfo.Country,
+                    PostalCode = contactInfo.Zip,
+                    Type = "work"
+                });
+                addresses.Add(new Address()
+                {
+                    StreetAddress = contactInfo.OtherAddress1,
+                    ExtendedAddress = contactInfo.OtherAddress2,
+                    City = contactInfo.OtherCity,
+                    Region = contactInfo.OtherState,
+                    Country = contactInfo.OtherCountry,
+                    PostalCode = contactInfo.OtherZip,
+                    Type = "home"
+                });
+                contactToCreate.Addresses = addresses;
+
+                List<Biography> biographies = new List<Biography>();
+                biographies.Add(new Biography() { Value = contactInfo.Description });
+                contactToCreate.Biographies = biographies;
+
+                List<UserDefined> userDefineds = new List<UserDefined>();
+                userDefineds.Add(new UserDefined() { Value = contactInfo.Udf1, Key = "Udf1" });
+                userDefineds.Add(new UserDefined() { Value = contactInfo.Udf2, Key = "Udf2" });
+                userDefineds.Add(new UserDefined() { Value = contactInfo.Udf3, Key = "Udf3" });
+                userDefineds.Add(new UserDefined() { Value = contactInfo.Udf4, Key = "Udf4" });
+                userDefineds.Add(new UserDefined() { Value = contactInfo.Udf5, Key = "Udf5" });
+                userDefineds.Add(new UserDefined() { Value = contactInfo.Udf6, Key = "Udf6" });
+                userDefineds.Add(new UserDefined() { Value = contactInfo.Udf7, Key = "Udf7" });
+                userDefineds.Add(new UserDefined() { Value = contactInfo.Udf8, Key = "Udf8" });
+                userDefineds.Add(new UserDefined() { Value = contactInfo.Udf9, Key = "Udf9" });
+                userDefineds.Add(new UserDefined() { Value = contactInfo.Udf10, Key = "Udf10" });
+                contactToCreate.UserDefined = userDefineds;
+
+                Membership membership = new Membership();
+                membership.ContactGroupMembership = new ContactGroupMembership()
+                {
+                    ContactGroupResourceName = groupSid
+                };
+                contactToCreate.Memberships = new List<Membership>();
+                contactToCreate.Memberships.Add(membership);
+                PeopleResource.CreateContactRequest createContactRequest = new PeopleResource.CreateContactRequest(_service, contactToCreate);
+                createContactRequest.CreateRequest();
+                var createdContact = createContactRequest.Execute();
+
+                if (contactInfo.Base64PhotoBytes != null)
+                {
+                    try
+                    {
+                        updateContactPhotoRequest = UpdateImage(createdContact.ResourceName, contactInfo.Base64PhotoBytes);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger?.Error(
+                                      "OAuth2.CSharp.Google.People.Contact.Insert",
+                                      $"Could not Add Photo: {ex.Message}");
+                    }
                 }
+
+                signatureInfo = new SignatureInfo()
+                {
+                    SId = createdContact.ResourceName,
+                    ETag = createdContact.ETag
+                };
+            }
+            catch (Exception ex)
+            {
+                logger?.Error(
+                              "OAuth2.CSharp.Google.People.Contact.Update",
+                              $"Could not update contact: {ex.Message}");
+                signatureInfo = new SignatureInfo()
+                {
+                    ErrorNumber = -1,
+                    ErrorMessage = ex.Message
+
+                };
+
             }
             // CR:2022-02-23 Please check for error and if there is an error, populate the error number and error description
-            var signatureInfo = new SignatureInfo()
-            {
-                SId = createdContact.ResourceName,
-                ETag = createdContact.ETag
-            };
             return signatureInfo;
         }
 
@@ -596,7 +624,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
 
             if (people.Addresses != null)
             {
-                if (people.Addresses[0].Type == "work")
+                if (people.Addresses.Count > 0)
                 {
                     contactInfo.Address1 = people.Addresses[0].StreetAddress;
                     contactInfo.Address2 = people.Addresses[0].ExtendedAddress;
@@ -605,7 +633,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
                     contactInfo.Country = people.Addresses[0].Country;
                     contactInfo.Zip = people.Addresses[0].PostalCode;
                 }
-                if (people.Addresses[1].Type == "home")
+                if (people.Addresses.Count > 0)
                 {
                     contactInfo.OtherAddress1 = people.Addresses[1].StreetAddress;
                     contactInfo.OtherAddress2 = people.Addresses[1].ExtendedAddress;
@@ -618,6 +646,7 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
 
             if (people.UserDefined != null)
             {
+                //CR:CR:2022-02-24 Use a linq expression to get the key and value and assign to contact info.
                 if (people.UserDefined.Count > 0)
                 {
                     contactInfo.Udf1 = people.UserDefined[0].Value;
