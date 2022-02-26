@@ -38,16 +38,16 @@ namespace OfficeClip.OpenSource.OAuth2.Example
                 litRefreshToken.Text = client.RefreshToken;
                 litState.Text = client.GetStateObject(string.Empty).GetValue("one");
                 //var message = new MimeKit.MimeMessage();
-                //message.From.Add(new MailboxAddress("SK Dutta", "skd@officeclip.com"));
-                ////message.To.Add(new MailboxAddress("SK Dutta", "skdutta@gmail.com"));
-                //message.To.Add(new MailboxAddress("Kim Jung", "kimjung@koreanmail.com"));
+                //message.From.Add(new MailboxAddress("SK Dutta", "xxx@xxx.com"));
+                ////message.To.Add(new MailboxAddress("SK Dutta", "yyy@yyy.com"));
+                //message.To.Add(new MailboxAddress("Kim Jung", "zzz@zzz.com"));
                 //message.Subject = "Test Subject 210010";
                 //message.Body = new TextPart("plain") { Text = @"Hey" };
                 //using (client1)
                 //{
                 //    client1.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
 
-                //    var oauth2 = new SaslMechanismOAuth2("skd@officeclip.com", client.AccessToken);
+                //    var oauth2 = new SaslMechanismOAuth2("xxx@xxx.com", client.AccessToken);
                 //    client1.Authenticate(oauth2);
 
                 //    client1.Send(message);
@@ -81,10 +81,10 @@ namespace OfficeClip.OpenSource.OAuth2.Example
                 //List<ContactInfo> contactInfoList = new List<ContactInfo>();
 
                 List<string> contactInfoList = new List<string>();
-                //contactInfoList.Add("people/c304565144089597399");
-                //contactInfoList.Add("people/c4635318391136207354");
-                //contactInfoList.Add("people/c4676380728778291940");
-                //contactInfoList.Add("people/c9202708945039554846");
+                //contactInfoList.Add("people/xxx");
+                //contactInfoList.Add("people/yyy");
+                //contactInfoList.Add("people/zzz");
+                //contactInfoList.Add("people/ttt");
 
                 //var isCreateContact = peopleContact.Delete(contactInfoList);
 
