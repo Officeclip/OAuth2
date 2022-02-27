@@ -33,10 +33,14 @@ namespace OfficeClip.OpenSource.OAuth2.Example
             //var client1 = new SmtpClient(new ProtocolLogger(@"c:\temp\smtp.log"));
             try
             {
+                //client.RefreshToken = ConfigurationManager.AppSettings["RefreshToken"];
+                //client.GetAccessTokenFromRefreshToken();
+
                 client.HandleAuthorizationCodeResponse();
-                litAccessToken.Text = client.AccessToken;
                 litRefreshToken.Text = client.RefreshToken;
-                litState.Text = client.GetStateObject(string.Empty).GetValue("one");
+                client.GetAccessTokenFromRefreshToken();
+                litAccessToken.Text = client.AccessToken;
+                //litState.Text = client.GetStateObject(string.Empty).GetValue("one");
                 //var message = new MimeKit.MimeMessage();
                 //message.From.Add(new MailboxAddress("SK Dutta", "xxx@xxx.com"));
                 ////message.To.Add(new MailboxAddress("SK Dutta", "yyy@yyy.com"));
