@@ -597,6 +597,18 @@ namespace OfficeClip.OpenSource.OAuth2.CSharp.Google.People
                 {
                     contactInfo.AlternateWorkPhone = people.PhoneNumbers[1].Value;
                 }
+                if (people.PhoneNumbers.Count > 2)
+                {
+                    contactInfo.HomePhone = people.PhoneNumbers[2].Value;
+                }
+                if (people.PhoneNumbers.Count > 3)
+                {
+                    contactInfo.MobilePhone = people.PhoneNumbers[3].Value;
+                }
+                if (people.PhoneNumbers.Count > 4)
+                {
+                    contactInfo.Fax = people.PhoneNumbers[4].Value;
+                }
             }
 
             if (
