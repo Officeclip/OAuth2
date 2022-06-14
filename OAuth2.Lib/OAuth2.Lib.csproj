@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OfficeClip.OpenSource.OAuth2.Lib</RootNamespace>
     <AssemblyName>OfficeClip.OpenSource.OAuth2.Lib</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
@@ -67,6 +67,7 @@
     <Compile Include="HttpAuthResponse.cs" />
     <Compile Include="IClient.cs" />
     <Compile Include="ProfilePicture.cs" />
+    <Compile Include="Provider\MS365.cs" />
     <Compile Include="Provider\Slack.cs" />
     <Compile Include="Value.cs" />
     <Compile Include="Key.cs" />

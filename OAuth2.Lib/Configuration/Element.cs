@@ -23,6 +23,9 @@ namespace OfficeClip.OpenSource.OAuth2.Lib.Configuration
 
         [ConfigurationProperty("redirectUri", IsRequired = false)]
         public string RedirectUri => base["redirectUri"].ToString();
+
+        [ConfigurationProperty("tenantId", IsRequired = false)]
+        public string TenantId => base["tenantId"].ToString();
     }
 
 }

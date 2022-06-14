@@ -11,7 +11,7 @@ namespace OfficeClip.OpenSource.OAuth2.Lib
 {
     public abstract class Client : Endpoint, IClient
     {
-         public string ClientId { get; private set; }
+        public string ClientId { get; private set; }
         public string ClientSecret { get; private set; }
         public string Scope { get; private set; }
         public string RedirectUri { get; private set; }
