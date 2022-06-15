@@ -41,6 +41,7 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
                 litRefreshToken.Text = client.RefreshToken;
                 client1.GetAccessTokenFromRefreshToken();
                 litAccessToken.Text = client.AccessToken;
+                litClientId.Text = element.ClientId;
                 //litState.Text = client.GetStateObject(string.Empty).GetValue("one");
                 //var message = new MimeKit.MimeMessage();
                 //message.From.Add(new MailboxAddress("SK Dutta", "xxx@xxx.com"));

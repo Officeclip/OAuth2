@@ -13,12 +13,14 @@
             <asp:Literal ID="litError" runat="server" />
         </div>
         <div>
+            Client Id:
+            <asp:Literal ID="litClientId" runat="server" />
             Access Token (from Authorization Code):
             <asp:Literal ID="litAccessToken" runat="server" />
-            <br />
+            <br /><br />
             State Value Returned:
             <asp:Literal ID="litState" runat="server" />
-            <br />
+            <br /><br />
             Refresh Token:
             <asp:Literal ID="litRefreshToken" runat="server" />
         </div>

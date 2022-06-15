@@ -18,9 +18,9 @@ namespace OfficeClip.OpenSource.OAuth2.Lib.Provider
             ) : base(clientId, clientSecret, scope, redirectUri)
         {
             _scope = scope;
-            AuthorizationUrl = $"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/authorize";
-            AccessTokenUrl = $"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/token";
-            RefreshTokenUrl = $"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/token";
+            AuthorizationUrl = $"https://login.microsoftonline.com/common/oauth2/v2.0/authorize";
+            AccessTokenUrl = $"https://login.microsoftonline.com/common/oauth2/v2.0/token";
+            RefreshTokenUrl = $"https://login.microsoftonline.com/common/oauth2/v2.0/token";
             ValidateTokenUrl = "";
             UserInfoUrl = "";
             IsValidateAccessToken = false;
