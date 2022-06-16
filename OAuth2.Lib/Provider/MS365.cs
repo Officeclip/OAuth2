@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 
 namespace OfficeClip.OpenSource.OAuth2.Lib.Provider
@@ -19,6 +16,8 @@ namespace OfficeClip.OpenSource.OAuth2.Lib.Provider
 
     public class MS365 : Client
     {
+        private const string MSGraphScope = "openid email user.read";
+        private const string ExchangeScope = "offline_access https://outlook.office.com/IMAP.AccessAsUser.All https://outlook.office.com/SMTP.Send";
         private string _scope;
         public MS365(
             string clientId,
@@ -45,6 +44,16 @@ namespace OfficeClip.OpenSource.OAuth2.Lib.Provider
         {
             parameters.Add(
                 Key.Scope, _scope);
+        }
+
+        public void SetGraphToken()
+        {
+            _scope = MSGraphScope;
+        }
+
+        public void SetExchangeToken()
+        {
+            _scope = ExchangeScope;
         }
 
         protected override UserInfo ExtractUserInfo(HttpAuthResponse response)
@@ -76,6 +85,23 @@ namespace OfficeClip.OpenSource.OAuth2.Lib.Provider
                 throw new Exception($"Unable to parse JSON response: {ex.Message}");
             }
             return returnValue;
+        }
+
+        public HttpAuthResponse GetSharedSecretAccessToken()
+        {
+            var parameters = new Dictionary<string, string>
+                                                        {
+                                                            {Key.ClientId, ClientId},
+                                                            {Key.ClientSecret, ClientSecret},
+                                                            {Key.Scope, "https://graph.microsoft.com/.default" },
+                                                            { Key.GrantType, "client_credential"}
+                                                        };
+            var response = Utils.MakeWebRequest(
+                                    "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+                                    parameters,
+                                    true
+                                    );
+            return response;
         }
     }
 }

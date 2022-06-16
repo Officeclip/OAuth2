@@ -1,16 +1,8 @@
 ﻿using OfficeClip.OpenSource.OAuth2.Lib;
 using System;
-using System.Net;
-using OfficeClip.OpenSource.OAuth2.Lib.Provider;
-using MailKit.Net.Smtp;
-using MailKit.Security;
-using MimeKit;
-using MailKit;
-using OfficeClip.OpenSource.OAuth2.Services.Google.People;
 //using OfficeClip.OpenSource.OAuth2.CSharp.Google.People;
-using System.Configuration;
-using devmon_library;
 using System.Collections.Generic;
+using System.Net;
 using OfficeClipMS365 = OfficeClip.OpenSource.OAuth2.Lib.Provider.MS365;
 //using OpenNetTools.OAuth2.Services.Google.Contacts;
 
@@ -24,40 +16,69 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
         {
             var element = Utils.LoadConfigurationFromWebConfig("MS365");
             var client = new OfficeClipMS365(
-                                element.ClientId, 
-                                element.ClientSecret, 
-                                element.Scope, 
+                                element.ClientId,
+                                element.ClientSecret,
+                                element.Scope,
                                 element.RedirectUri,
                                 element.TenantId);
-            //var element = Utils.LoadConfigurationFromWebConfig("WindowsLive");
-            //var client = new WindowsLive(element.ClientId, element.ClientSecret, element.Scope, element.RedirectUri);
-            //var client1 = new SmtpClient(new ProtocolLogger(@"c:\temp\smtp.log"));
+            //var client = new SmtpClient(new ProtocolLogger(@"c:\temp\smtp.log"));
             try
             {
-                //client.RefreshToken = ConfigurationManager.AppSettings["RefreshToken"];
-                //client.GetAccessTokenFromRefreshToken();
-                //Client client1 = client;
-                client.HandleAuthorizationCodeResponse();
-                litRefreshToken.Text = client.RefreshToken;
-                client.GetAccessTokenFromRefreshToken();
-                litAccessToken.Text = client.AccessToken;
-                litClientId.Text = element.ClientId;
-                litState.Text = client.GetStateObject(string.Empty).GetValue("one");
+                var state = client.GetStateObject(string.Empty).GetValue("mode");
 
-                //var UserInfo = client.GetUserInfo(true);
+                if (state == "Exchange")
+                {
+                    client.SetExchangeToken();
+                    client.HandleAuthorizationCodeResponse();
+                    client.GetAccessTokenFromRefreshToken();
+                    Session["ExchangeAccessToken"] = client.AccessToken;
+                    Session["ExchangeRefreshToken"] = client.RefreshToken;
+                }
+                else
+                {
+                    client.SetGraphToken();
+                    client.HandleAuthorizationCodeResponse();
+                    Session["GraphAccessToken"] = client.AccessToken;
+                    Session["GraphRefreshToken"] = client.RefreshToken;
+                    var response = Utils.MakeWebRequest(
+                                                client.UserInfoUrl,
+                                                null,
+                                                false,
+                                                client.AccessToken);
+                    litResponseString.Text = response.ResponseString;
+                }
+                if (Session["GraphAccessToken"] != null)
+                {
+                    litExchangeAccessToken.Text = Session["ExchangeAccessToken"].ToString();
+                    litExchangeRefreshToken.Text = Session["ExchangeRefreshToken"].ToString();
+                    litGraphAccessToken.Text = Session["GraphAccessToken"].ToString();
+                    litGraphRefreshToken.Text = Session["GraphRefreshToken"].ToString();
+                    return;
+                }
+                Response.Redirect("../default.aspx?mode=Graph");
 
-                var response = Utils.MakeWebRequest(
-                                            client.UserInfoUrl,
-                                            null,
-                                            false,
-                                            client.AccessToken);
-                litResponseString.Text = response.ResponseString;
-                var message = new MimeKit.MimeMessage();
-                message.From.Add(new MailboxAddress("SK Dutta", "xxx@xxx.com"));
-                message.To.Add(new MailboxAddress("SK Dutta", "yyy@yyy.com"));
-                message.To.Add(new MailboxAddress("Kim Jung", "zzz@zzz.com"));
-                message.Subject = "Test Subject 210010";
-                message.Body = new TextPart("plain") { Text = @"Hey" };
+                //litExchangeAccessToken.Text = client1.AccessToken;
+                //litExchangeRefreshToken.Text = client1.RefreshToken;
+
+                //var response = client1.GetSharedSecretAccessToken();
+                //var output = response.ResponseString;
+                //---------------------------
+                //client.SetGraphToken();
+                //client.HandleAuthorizationCodeResponse();
+                //litGraphAccessToken.Text = client.AccessToken;
+                //litGraphRefreshToken.Text = client.RefreshToken;
+                //litClientId.Text = element.ClientId;
+                //litState.Text = client.GetStateObject(string.Empty).GetValue("one");
+
+                //var UserInfo = client.GetUserInfo();
+
+
+                //var message = new MimeKit.MimeMessage();
+                //message.From.Add(new MailboxAddress("SK Dutta", "xxx@xxx.com"));
+                //message.To.Add(new MailboxAddress("SK Dutta", "yyy@yyy.com"));
+                //message.To.Add(new MailboxAddress("Kim Jung", "zzz@zzz.com"));
+                //message.Subject = "Test Subject 210010";
+                //message.Body = new TextPart("plain") { Text = @"Hey" };
                 //using (client1)
                 //{
                 //    client1.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);

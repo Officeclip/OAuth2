@@ -1,6 +1,5 @@
-﻿using System;
-using OfficeClip.OpenSource.OAuth2.Lib;
-using OfficeClip.OpenSource.OAuth2.Lib.Provider;
+﻿using OfficeClip.OpenSource.OAuth2.Lib;
+using System;
 using OfficeClipMS365 = OfficeClip.OpenSource.OAuth2.Lib.Provider.MS365;
 
 namespace OfficeClip.OpenSource.OAuth2.Example
@@ -12,9 +11,9 @@ namespace OfficeClip.OpenSource.OAuth2.Example
         {
             var element = Utils.LoadConfigurationFromWebConfig("MS365"); //Test Google
             var client = new OfficeClipMS365(
-                                element.ClientId, 
-                                element.ClientSecret, 
-                                element.Scope, 
+                                element.ClientId,
+                                element.ClientSecret,
+                                element.Scope,
                                 element.RedirectUri,
                                 element.TenantId);
             //client.ForceRefreshToken = true;
@@ -23,9 +22,12 @@ namespace OfficeClip.OpenSource.OAuth2.Example
             //client.ForceRefreshToken = true;
             try
             {
-                
+                var mode =
+                        string.IsNullOrEmpty(Request.QueryString["mode"])
+                        ? "Exchange"
+                        : Request.QueryString["mode"];
                 State state = new State(string.Empty);
-                state.Add("one", "State for one");
+                state.Add("mode", mode);
                 client.Authenticate(state);
             }
             catch (Exception ex)

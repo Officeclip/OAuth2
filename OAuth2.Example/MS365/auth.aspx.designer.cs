@@ -42,13 +42,40 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
         protected global::System.Web.UI.WebControls.Literal litClientId;
 
         /// <summary>
-        /// litAccessToken control.
+        /// litGraphAccessToken control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litAccessToken;
+        protected global::System.Web.UI.WebControls.Literal litGraphAccessToken;
+
+        /// <summary>
+        /// litGraphRefreshToken control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litGraphRefreshToken;
+
+        /// <summary>
+        /// litExchangeAccessToken control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litExchangeAccessToken;
+
+        /// <summary>
+        /// litExchangeRefreshToken control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litExchangeRefreshToken;
 
         /// <summary>
         /// litState control.
@@ -60,13 +87,13 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
         protected global::System.Web.UI.WebControls.Literal litState;
 
         /// <summary>
-        /// litRefreshToken control.
+        /// litExchangeAccessRefreshToken control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litRefreshToken;
+        protected global::System.Web.UI.WebControls.Literal litExchangeAccessRefreshToken;
 
         /// <summary>
         /// litResponseString control.
