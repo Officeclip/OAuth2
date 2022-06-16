@@ -62,7 +62,11 @@ namespace OfficeClip.OpenSource.OAuth2.Lib
                 }
                 else // get request
                 {
-                    request = WebRequest.Create($"{url}?{parameterData}");
+                    var uri =
+                            (string.IsNullOrEmpty(parameterData))
+                            ? url
+                            : $"{url}?{parameterData}";
+                    request = WebRequest.Create(uri);
                     request.Method = "GET";
                 }
                 if (accessToken != null)

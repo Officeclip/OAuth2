@@ -36,19 +36,28 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
             {
                 //client.RefreshToken = ConfigurationManager.AppSettings["RefreshToken"];
                 //client.GetAccessTokenFromRefreshToken();
-                Client client1 = client;
-                client1.HandleAuthorizationCodeResponse();
+                //Client client1 = client;
+                client.HandleAuthorizationCodeResponse();
                 litRefreshToken.Text = client.RefreshToken;
-                client1.GetAccessTokenFromRefreshToken();
+                client.GetAccessTokenFromRefreshToken();
                 litAccessToken.Text = client.AccessToken;
                 litClientId.Text = element.ClientId;
-                //litState.Text = client.GetStateObject(string.Empty).GetValue("one");
-                //var message = new MimeKit.MimeMessage();
-                //message.From.Add(new MailboxAddress("SK Dutta", "xxx@xxx.com"));
-                ////message.To.Add(new MailboxAddress("SK Dutta", "yyy@yyy.com"));
-                //message.To.Add(new MailboxAddress("Kim Jung", "zzz@zzz.com"));
-                //message.Subject = "Test Subject 210010";
-                //message.Body = new TextPart("plain") { Text = @"Hey" };
+                litState.Text = client.GetStateObject(string.Empty).GetValue("one");
+
+                //var UserInfo = client.GetUserInfo(true);
+
+                var response = Utils.MakeWebRequest(
+                                            client.UserInfoUrl,
+                                            null,
+                                            false,
+                                            client.AccessToken);
+                litResponseString.Text = response.ResponseString;
+                var message = new MimeKit.MimeMessage();
+                message.From.Add(new MailboxAddress("SK Dutta", "xxx@xxx.com"));
+                message.To.Add(new MailboxAddress("SK Dutta", "yyy@yyy.com"));
+                message.To.Add(new MailboxAddress("Kim Jung", "zzz@zzz.com"));
+                message.Subject = "Test Subject 210010";
+                message.Body = new TextPart("plain") { Text = @"Hey" };
                 //using (client1)
                 //{
                 //    client1.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);

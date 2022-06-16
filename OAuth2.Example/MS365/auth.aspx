@@ -15,6 +15,7 @@
         <div>
             Client Id:
             <asp:Literal ID="litClientId" runat="server" />
+            <br /><br />
             Access Token (from Authorization Code):
             <asp:Literal ID="litAccessToken" runat="server" />
             <br /><br />
@@ -23,6 +24,9 @@
             <br /><br />
             Refresh Token:
             <asp:Literal ID="litRefreshToken" runat="server" />
+            <br /><br />
+            Response String:
+            <asp:Literal ID="litResponseString" runat="server" />
         </div>
    </form>
 </body>
