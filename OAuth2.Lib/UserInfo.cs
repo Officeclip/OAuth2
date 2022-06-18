@@ -44,5 +44,6 @@
         /// The domain that the user is registered in, useful for google apps login
         /// </summary>
         public string Domain { get; set; }
+
     }
 }

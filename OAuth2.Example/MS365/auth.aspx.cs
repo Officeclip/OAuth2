@@ -1,4 +1,5 @@
-﻿using OfficeClip.OpenSource.OAuth2.Lib;
+﻿using Newtonsoft.Json;
+using OfficeClip.OpenSource.OAuth2.Lib;
 using System;
 //using OfficeClip.OpenSource.OAuth2.CSharp.Google.People;
 using System.Collections.Generic;
@@ -31,31 +32,12 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
                     client.SetExchangeToken();
                     client.HandleAuthorizationCodeResponse();
                     client.GetAccessTokenFromRefreshToken();
-                    Session["ExchangeAccessToken"] = client.AccessToken;
-                    Session["ExchangeRefreshToken"] = client.RefreshToken;
+                    litExchangeAccessToken.Text = client.AccessToken;
+                    litExchangeRefreshToken.Text = client.RefreshToken;
+                    var userInfo = client.GetUserInfo();
+                    litResponseString.Text = JsonConvert.SerializeObject(userInfo, Formatting.Indented);
                 }
-                else
-                {
-                    client.SetGraphToken();
-                    client.HandleAuthorizationCodeResponse();
-                    Session["GraphAccessToken"] = client.AccessToken;
-                    Session["GraphRefreshToken"] = client.RefreshToken;
-                    var response = Utils.MakeWebRequest(
-                                                client.UserInfoUrl,
-                                                null,
-                                                false,
-                                                client.AccessToken);
-                    litResponseString.Text = response.ResponseString;
-                }
-                if (Session["GraphAccessToken"] != null)
-                {
-                    litExchangeAccessToken.Text = Session["ExchangeAccessToken"].ToString();
-                    litExchangeRefreshToken.Text = Session["ExchangeRefreshToken"].ToString();
-                    litGraphAccessToken.Text = Session["GraphAccessToken"].ToString();
-                    litGraphRefreshToken.Text = Session["GraphRefreshToken"].ToString();
-                    return;
-                }
-                Response.Redirect("../default.aspx?mode=Graph");
+
 
                 //litExchangeAccessToken.Text = client1.AccessToken;
                 //litExchangeRefreshToken.Text = client1.RefreshToken;

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OfficeClip.OpenSource.OAuth2.Lib
+﻿namespace OfficeClip.OpenSource.OAuth2.Lib
 {
     public class CodeResponse
     {
@@ -22,6 +16,10 @@ namespace OfficeClip.OpenSource.OAuth2.Lib
         /// Token issued by the provider.
         /// </summary>
         public string Refresh_Token { get; set; }
+        /// <summary>
+        /// The id token mostly available in Microsoft 365
+        /// </summary>
+        public string Id_Token { get; set; }
 
         /// <summary>
         /// Amount of second til token expires.

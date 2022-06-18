@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Script.Serialization;
 
@@ -17,6 +14,7 @@ namespace OfficeClip.OpenSource.OAuth2.Lib
         public string RedirectUri { get; private set; }
         public string AccessToken { get; private set; }
         public string RefreshToken { get; set; }
+        public string IdToken { get; set; }
         public DateTime AccessTokenExpiration { get; private set; }
         public string TokenType { get; private set; }
         public bool IsAuthorized { get; private set; }
@@ -226,6 +224,9 @@ namespace OfficeClip.OpenSource.OAuth2.Lib
                     if (!string.IsNullOrWhiteSpace(codeResponse.Refresh_Token))
                         RefreshToken = codeResponse.Refresh_Token;
 
+                    if (!string.IsNullOrWhiteSpace(codeResponse.Id_Token))
+                        IdToken = codeResponse.Id_Token;
+
                     if (codeResponse.Expires_In > 0)
                         AccessTokenExpiration = DateTime.Now.AddSeconds(codeResponse.Expires_In);
 
@@ -278,7 +279,7 @@ namespace OfficeClip.OpenSource.OAuth2.Lib
             }
         }
 
-        public UserInfo GetUserInfo()
+        public virtual UserInfo GetUserInfo()
         {
             if (string.IsNullOrWhiteSpace(AccessToken))
             {

@@ -1,17 +1,30 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Web.Script.Serialization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 
 namespace OfficeClip.OpenSource.OAuth2.Lib.Provider
 {
     public class MS365UserInfo
     {
+        [JsonProperty("id")]
         public string Id { get; set; }
-        public string Name { get; set; }
-        public string Given_Name { get; set; }
-        public string Family_Name { get; set; }
+
+        [JsonProperty("displayName")]
+        public string DisplayName { get; set; }
+
+        [JsonProperty("givenName")]
+        public string GivenName { get; set; }
+
+        [JsonProperty("surName")]
+        public string SurName { get; set; }
+
+        [JsonProperty("picture")]
         public string Picture { get; set; }
-        public string Email { get; set; }
+
+        [JsonProperty("userPrincipalName")]
+        public string UserPrincipalName { get; set; }
     }
 
     public class MS365 : Client
@@ -56,29 +69,40 @@ namespace OfficeClip.OpenSource.OAuth2.Lib.Provider
             _scope = ExchangeScope;
         }
 
-        protected override UserInfo ExtractUserInfo(HttpAuthResponse response)
+        public override UserInfo GetUserInfo()
         {
-            UserInfo returnValue = null;
-            if (response == null)
-                return null;
+            if (string.IsNullOrWhiteSpace(AccessToken))
+            {
+                throw new Exception("Access Token is required to get user info");
+            }
+
+            //var response = Utils.MakeWebRequest(UserInfoUrl, null, false, AccessToken);
+            return GetUserInfoFromIdToken();
+        }
+
+        /// <summary>
+        /// Extract the limited user information from the id token
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        private UserInfo GetUserInfoFromIdToken()
+        {
+            UserInfo returnValue;
+            var token = new JwtSecurityToken(jwtEncodedString: IdToken);
+            if (token == null)
+            {
+                throw new Exception("User Information could not be retrived from the Id Token");
+            }
             try
             {
-                if (!Utils.IsJson(response.ResponseString))
-                {
-                    throw new Exception($"String not in json format: {response.ResponseString}");
-                }
-                var MS365UserInfo = new JavaScriptSerializer().Deserialize<MS365UserInfo>(response.ResponseString);
                 returnValue = new UserInfo
                 {
-                    Id = MS365UserInfo.Id,
-                    FullName = MS365UserInfo.Name,
-                    FirstName = MS365UserInfo.Given_Name,
-                    LastName = MS365UserInfo.Family_Name,
-                    Email = MS365UserInfo.Email,
-                    //Gender = MS365UserInfo.Gender,
-                    //SocialLink = MS365UserInfo.Link,
-                    PictureUrl = MS365UserInfo.Picture
+                    Id = token.Claims.First(c => c.Type == "sid").Value,
+                    FirstName = token.Claims.First(c => c.Type == "given_name").Value,
+                    LastName = token.Claims.First(c => c.Type == "family_name").Value,
+                    Email = token.Claims.First(c => c.Type == "email").Value
                 };
+                returnValue.FullName = $"{returnValue.FirstName} {returnValue.LastName}";
             }
             catch (Exception ex)
             {
