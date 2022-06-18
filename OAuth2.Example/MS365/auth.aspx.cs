@@ -1,4 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using MailKit;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
+using Newtonsoft.Json;
 using OfficeClip.OpenSource.OAuth2.Lib;
 using System;
 //using OfficeClip.OpenSource.OAuth2.CSharp.Google.People;
@@ -22,11 +26,10 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
                                 element.Scope,
                                 element.RedirectUri,
                                 element.TenantId);
-            //var client = new SmtpClient(new ProtocolLogger(@"c:\temp\smtp.log"));
             try
             {
                 var state = client.GetStateObject(string.Empty).GetValue("mode");
-
+                UserInfo userInfo = null;
                 if (state == "Exchange")
                 {
                     client.SetExchangeToken();
@@ -34,43 +37,31 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
                     client.GetAccessTokenFromRefreshToken();
                     litExchangeAccessToken.Text = client.AccessToken;
                     litExchangeRefreshToken.Text = client.RefreshToken;
-                    var userInfo = client.GetUserInfo();
+                    userInfo = client.GetUserInfo();
                     litResponseString.Text = JsonConvert.SerializeObject(userInfo, Formatting.Indented);
                 }
+                if (userInfo == null)
+                {
+                    throw new Exception("Could not extract UserInfo");
+                }
 
-
-                //litExchangeAccessToken.Text = client1.AccessToken;
-                //litExchangeRefreshToken.Text = client1.RefreshToken;
-
-                //var response = client1.GetSharedSecretAccessToken();
-                //var output = response.ResponseString;
-                //---------------------------
-                //client.SetGraphToken();
-                //client.HandleAuthorizationCodeResponse();
-                //litGraphAccessToken.Text = client.AccessToken;
-                //litGraphRefreshToken.Text = client.RefreshToken;
-                //litClientId.Text = element.ClientId;
-                //litState.Text = client.GetStateObject(string.Empty).GetValue("one");
-
-                //var UserInfo = client.GetUserInfo();
-
-
-                //var message = new MimeKit.MimeMessage();
-                //message.From.Add(new MailboxAddress("SK Dutta", "xxx@xxx.com"));
-                //message.To.Add(new MailboxAddress("SK Dutta", "yyy@yyy.com"));
+                var smtpClient = new SmtpClient(new ProtocolLogger(@"c:\temp\smtp.log"));
+                var message = new MimeKit.MimeMessage();
+                message.From.Add(new MailboxAddress(userInfo.FullName, userInfo.Email));
+                message.To.Add(new MailboxAddress("SK Dutta", "skd@officeclip.com"));
                 //message.To.Add(new MailboxAddress("Kim Jung", "zzz@zzz.com"));
-                //message.Subject = "Test Subject 210010";
-                //message.Body = new TextPart("plain") { Text = @"Hey" };
-                //using (client1)
-                //{
-                //    client1.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                message.Subject = "Test Subject 210010";
+                message.Body = new TextPart("plain") { Text = @"Hey" };
+                using (smtpClient)
+                {
+                    smtpClient.Connect("smtp.office365.com", 587, SecureSocketOptions.StartTls);
 
-                //    var oauth2 = new SaslMechanismOAuth2("xxx@xxx.com", client.AccessToken);
-                //    client1.Authenticate(oauth2);
+                    var oauth2 = new SaslMechanismOAuth2(userInfo.Email, client.AccessToken);
+                    smtpClient.Authenticate(oauth2);
 
-                //    client1.Send(message);
-                //    client1.Disconnect(true);
-                //}
+                    smtpClient.Send(message);
+                    smtpClient.Disconnect(true);
+                }
             }
             catch (Exception ex)
             {
