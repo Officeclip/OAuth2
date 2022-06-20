@@ -35,8 +35,11 @@
             Refresh Token:
             <asp:Literal ID="litExchangeAccessRefreshToken" runat="server" />
             <br /><br />
-            Response String:
+            User Info String:
             <asp:Literal ID="litResponseString" runat="server" />
+             <br /><br />
+            Imap Test Output
+            <asp:Literal ID="litImapTest" runat="server" />
         </div>
    </form>
 </body>

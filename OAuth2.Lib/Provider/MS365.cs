@@ -87,7 +87,7 @@ namespace OfficeClip.OpenSource.OAuth2.Lib.Provider
         /// <exception cref="Exception"></exception>
         private UserInfo GetUserInfoFromIdToken()
         {
-            UserInfo returnValue;
+            UserInfo userInfo;
             var token = new JwtSecurityToken(jwtEncodedString: IdToken);
             if (token == null)
             {
@@ -95,20 +95,28 @@ namespace OfficeClip.OpenSource.OAuth2.Lib.Provider
             }
             try
             {
-                returnValue = new UserInfo
+                userInfo = new UserInfo
                 {
-                    Id = token.Claims.First(c => c.Type == "sid").Value,
-                    FirstName = token.Claims.First(c => c.Type == "given_name").Value,
-                    LastName = token.Claims.First(c => c.Type == "family_name").Value,
-                    Email = token.Claims.First(c => c.Type == "email").Value
+                    Id = token.Claims.First(c => c.Type == "sid").Value
                 };
-                returnValue.FullName = $"{returnValue.FirstName} {returnValue.LastName}";
+
+                userInfo.FirstName =
+                            token.Claims.Where(c => c.Type == "first_name").ToList().Count == 0
+                            ? string.Empty
+                            : token.Claims.First(c => c.Type == "given_name").Value;
+                userInfo.LastName =
+                            token.Claims.Where(c => c.Type == "family_name").ToList().Count == 0
+                            ? string.Empty
+                            : token.Claims.First(c => c.Type == "family_name").Value;
+
+                userInfo.Email = token.Claims.First(c => c.Type == "email").Value;
+                userInfo.FullName = $"{userInfo.FirstName} {userInfo.LastName}";
             }
             catch (Exception ex)
             {
                 throw new Exception($"Unable to parse JSON response: {ex.Message}");
             }
-            return returnValue;
+            return userInfo;
         }
 
         public HttpAuthResponse GetSharedSecretAccessToken()
