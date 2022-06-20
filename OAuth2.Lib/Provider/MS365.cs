@@ -101,7 +101,7 @@ namespace OfficeClip.OpenSource.OAuth2.Lib.Provider
                 };
 
                 userInfo.FirstName =
-                            token.Claims.Where(c => c.Type == "first_name").ToList().Count == 0
+                            token.Claims.Where(c => c.Type == "given_name").ToList().Count == 0
                             ? string.Empty
                             : token.Claims.First(c => c.Type == "given_name").Value;
                 userInfo.LastName =
