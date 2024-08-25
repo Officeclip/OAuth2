@@ -46,9 +46,9 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
                     throw new Exception("Could not extract UserInfo");
                 }
 
-                //TestSmtpSettings(client, userInfo);
-                var imapTestValues = TestIMapSettings(client, userInfo);
-                litImapTest.Text = imapTestValues.ToString();
+                TestSmtpSettings(client, userInfo);
+                //var imapTestValues = TestIMapSettings(client, userInfo);
+                //litImapTest.Text = imapTestValues.ToString();
             }
             catch (Exception ex)
             {
