@@ -33,6 +33,15 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
         protected global::System.Web.UI.WebControls.Literal litError;
 
         /// <summary>
+        /// litMode control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litMode;
+
+        /// <summary>
         /// litClientId control.
         /// </summary>
         /// <remarks>
@@ -42,40 +51,22 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
         protected global::System.Web.UI.WebControls.Literal litClientId;
 
         /// <summary>
-        /// litGraphAccessToken control.
+        /// litAccessToken control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litGraphAccessToken;
+        protected global::System.Web.UI.WebControls.Literal litAccessToken;
 
         /// <summary>
-        /// litGraphRefreshToken control.
+        /// litRefreshToken control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litGraphRefreshToken;
-
-        /// <summary>
-        /// litExchangeAccessToken control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litExchangeAccessToken;
-
-        /// <summary>
-        /// litExchangeRefreshToken control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litExchangeRefreshToken;
+        protected global::System.Web.UI.WebControls.Literal litRefreshToken;
 
         /// <summary>
         /// litState control.
@@ -85,15 +76,6 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal litState;
-
-        /// <summary>
-        /// litExchangeAccessRefreshToken control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litExchangeAccessRefreshToken;
 
         /// <summary>
         /// litResponseString control.

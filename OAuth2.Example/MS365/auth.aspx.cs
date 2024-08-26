@@ -29,24 +29,34 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
                                 element.TenantId);
             try
             {
-                var state = client.GetStateObject(string.Empty).GetValue("mode");
-                UserInfo userInfo = null;
-                if (state == "Exchange")
+                litClientId.Text = element.ClientId;
+                var nonceString = (string)Session["nonceString"];
+                litState.Text = nonceString;
+                var mode = client.GetStateObject(nonceString).GetValue("mode");
+                litMode.Text = mode;
+                switch (mode)
                 {
-                    client.SetExchangeToken();
-                    client.HandleAuthorizationCodeResponse();
-                    client.GetAccessTokenFromRefreshToken();
-                    litExchangeAccessToken.Text = client.AccessToken;
-                    litExchangeRefreshToken.Text = client.RefreshToken;
-                    userInfo = client.GetUserInfo();
-                    litResponseString.Text = JsonConvert.SerializeObject(userInfo, Formatting.Indented);
+                    case "Exchange":
+                        client.SetExchangeToken();
+                        break;
+                    default:
+                        client.SetGraphToken();
+                        break;
                 }
-                if (userInfo == null)
+                client.HandleAuthorizationCodeResponse();
+                client.GetAccessTokenFromRefreshToken();
+                litAccessToken.Text = client.AccessToken;
+                litRefreshToken.Text = client.RefreshToken;
+                var userInfo = client.GetUserInfo() ?? throw new Exception("Could not extract UserInfo");
+                switch (mode)
                 {
-                    throw new Exception("Could not extract UserInfo");
+                    case "Exchange":
+                        TestSmtpSettings(client, userInfo);
+                        break;
+                    default:
+                        litResponseString.Text = JsonConvert.SerializeObject(userInfo, Formatting.Indented);
+                        break;
                 }
-
-                TestSmtpSettings(client, userInfo);
                 //var imapTestValues = TestIMapSettings(client, userInfo);
                 //litImapTest.Text = imapTestValues.ToString();
             }

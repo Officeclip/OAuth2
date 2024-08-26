@@ -13,27 +13,19 @@
             <asp:Literal ID="litError" runat="server" />
         </div>
         <div>
+            Mode:
+            <asp:Literal ID="litMode" runat="server" />
             Client Id:
             <asp:Literal ID="litClientId" runat="server" />
             <br /><br />
-            Graph Access Token:
-            <asp:Literal ID="litGraphAccessToken" runat="server" />
+            Access Token:
+            <asp:Literal ID="litAccessToken" runat="server" />
             <br /><br />
-           Graph Refresh Token:
-            <asp:Literal ID="litGraphRefreshToken" runat="server" />
-            <br /><br />
-            <hr />
-            Exchange Access Token:
-            <asp:Literal ID="litExchangeAccessToken" runat="server" />
-            <br /><br />
-            Exchange Refresh Token:
-            <asp:Literal ID="litExchangeRefreshToken" runat="server" />
+           Refresh Token:
+            <asp:Literal ID="litRefreshToken" runat="server" />
             <br /><br />
             State Value Returned:
             <asp:Literal ID="litState" runat="server" />
-            <br /><br />
-            Refresh Token:
-            <asp:Literal ID="litExchangeAccessRefreshToken" runat="server" />
             <br /><br />
             User Info String:
             <asp:Literal ID="litResponseString" runat="server" />
