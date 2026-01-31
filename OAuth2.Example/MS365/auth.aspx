@@ -32,6 +32,12 @@
              <br /><br />
             Imap Test Output
             <asp:Literal ID="litImapTest" runat="server" />
+             <br /><br />
+            Exchange Access Token
+            <asp:Literal ID="litExchangeAccessToken" runat="server" />
+             <br /><br />
+            Exchange Refresh Token
+            <asp:Literal ID="litExchangeRefreshToken" runat="server" />
         </div>
    </form>
 </body>

@@ -16,10 +16,6 @@ namespace OfficeClip.OpenSource.OAuth2.Example
                                 element.Scope,
                                 element.RedirectUri,
                                 element.TenantId);
-            //client.ForceRefreshToken = true;
-            //var element = Utils.LoadConfigurationFromWebConfig("WindowsLive"); // Test Live
-            //var client = new WindowsLive(element.ClientId, element.ClientSecret, element.Scope, element.RedirectUri);
-            //client.ForceRefreshToken = true;
             try
             {
                 var mode =
@@ -38,24 +34,6 @@ namespace OfficeClip.OpenSource.OAuth2.Example
                 litError.Text = ex.Message;
                 return;
             }
-            //try
-            //{
-            //    UserInfo userInfo = client.GetUserInfo();
-            //    litFullName.Text = userInfo.FullName;
-            //    ProfilePicture picture = new ProfilePicture(userInfo.PictureUrl, true);
-            //    ImageHtml = picture.HtmlPart;
-            //}
-            //catch (Exception ex)
-            //{
-            //    litError.Text = ex.Message;
-            //}
-            //DomainUsers googleDomainUsers = new DomainUsers(client.AccessToken);
-            //litDirectoryString.Text = googleDomainUsers.ToJsonString();
-
-            //state.Add("two", "http://www.yahoo.com");
-            //string stateString = state.ToString();
-            //State state1 = new State(stateString);
-            //string value = state1.GetValue("one");
         }
     }
 }

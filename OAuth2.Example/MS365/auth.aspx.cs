@@ -6,11 +6,7 @@ using MimeKit;
 using Newtonsoft.Json;
 using OfficeClip.OpenSource.OAuth2.Lib;
 using System;
-//using OfficeClip.OpenSource.OAuth2.CSharp.Google.People;
-using System.Collections.Generic;
-using System.Net;
 using OfficeClipMS365 = OfficeClip.OpenSource.OAuth2.Lib.Provider.MS365;
-//using OpenNetTools.OAuth2.Services.Google.Contacts;
 
 namespace OfficeClip.OpenSource.OAuth2.Example.MS365
 {
@@ -35,7 +31,7 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
                 {
                     client.SetExchangeToken();
                     client.HandleAuthorizationCodeResponse();
-                    client.GetAccessTokenFromRefreshToken();
+                   // client.GetAccessTokenFromRefreshToken(); // remove by suggestion from aistudio.google.com
                     litExchangeAccessToken.Text = client.AccessToken;
                     litExchangeRefreshToken.Text = client.RefreshToken;
                     userInfo = client.GetUserInfo();
@@ -47,24 +43,14 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
                 }
 
                 TestSmtpSettings(client, userInfo);
-                //var imapTestValues = TestIMapSettings(client, userInfo);
-                //litImapTest.Text = imapTestValues.ToString();
             }
             catch (Exception ex)
             {
                 litError.Text = ex.Message;
-                //litError.Text = client1.ProtocolLogger
-                //return;
             }
             finally
             {
             }
-
-            //CalendarList calendarList = new CalendarList(client.AccessToken);
-            //litCalendarString.Text = calendarList.ToJsonString();
-
-            //ContactsGroup contactGroup = new ContactsGroup(client.AccessToken);
-            //litContactString.Text = contactGroup.ToJsonString();
         }
 
         private static void TestSmtpSettings(OfficeClipMS365 client, UserInfo userInfo)
@@ -73,7 +59,6 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
             var message = new MimeKit.MimeMessage();
             message.From.Add(new MailboxAddress(userInfo.FullName, userInfo.Email));
             message.To.Add(new MailboxAddress("SK Dutta", "skd@officeclip.com"));
-            //message.To.Add(new MailboxAddress("Kim Jung", "zzz@zzz.com"));
             message.Subject = "Test Subject 210010";
             message.Body = new TextPart("plain") { Text = @"Hey" };
             using (smtpClient)
@@ -91,7 +76,6 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
         private static string TestIMapSettings(OfficeClipMS365 client, UserInfo userInfo)
         {
             ImapClient imapClient = null;
-            //var email = "skd@officeclip.com";
             var email = userInfo.Email;
             try
             {

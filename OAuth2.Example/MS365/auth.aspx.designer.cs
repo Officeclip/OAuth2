@@ -94,5 +94,23 @@ namespace OfficeClip.OpenSource.OAuth2.Example.MS365
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal litImapTest;
+
+        /// <summary>
+        /// litExchangeAccessToken control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litExchangeAccessToken;
+
+        /// <summary>
+        /// litExchangeRefreshToken control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litExchangeRefreshToken;
     }
 }
