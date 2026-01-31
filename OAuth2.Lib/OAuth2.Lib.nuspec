@@ -10,9 +10,9 @@
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/Officeclip/OAuth2</projectUrl>
     <iconUrl>https://www.officeclip.com/images/logo1.gif</iconUrl>
-    <description>A Wrapper over Google OAuth2</description>
+    <description>A Wrapper over various OAuth2 APIs</description>
     <releaseNotes></releaseNotes>
-    <copyright>Copyright 2020</copyright>
+    <copyright>Copyright 2022</copyright>
     <tags></tags>
   </metadata>
 </package>

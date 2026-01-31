@@ -28,6 +28,9 @@ namespace OfficeClip.OpenSource.OAuth2.Example
                         : Request.QueryString["mode"];
                 State state = new State(string.Empty);
                 state.Add("mode", mode);
+                var nonceString = DateTime.Now.Ticks.ToString();
+                Session["nonceString"] = nonceString;
+                state.Add("nonce", nonceString);
                 client.Authenticate(state);
             }
             catch (Exception ex)
